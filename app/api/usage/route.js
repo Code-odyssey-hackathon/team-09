@@ -54,31 +54,3 @@ export async function POST(request) {
     )
   }
 }
-
-export async function POST(request) {
-  try {
-    const data = await request.json()
-    const { userId } = data
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required.' },
-        { status: 400 }
-      )
-    }
-
-    const usage = getUserUsage(userId)
-    usage.analysesCount += 1
-    usage.lastAnalysisAt = Math.floor(Date.now() / 1000)
-
-    return NextResponse.json({
-      usage,
-      message: 'Usage recorded successfully.'
-    })
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to record usage.' },
-      { status: 500 }
-    )
-  }
-}

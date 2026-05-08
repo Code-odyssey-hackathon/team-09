@@ -80,12 +80,6 @@ export async function POST(request) {
     )
   }
 }
-    return NextResponse.json(
-      { error: error.message || 'Failed to create subscription.' },
-      { status: 500 }
-    )
-  }
-}
 
 export async function PUT(request) {
   try {
