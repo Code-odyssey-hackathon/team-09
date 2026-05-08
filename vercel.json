@@ -12,6 +12,14 @@
       "dest": "/api/$1"
     },
     {
+      "src": "/app",
+      "dest": "/app.html"
+    },
+    {
+      "src": "/hero-leaf.png",
+      "dest": "/hero-leaf.png"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
