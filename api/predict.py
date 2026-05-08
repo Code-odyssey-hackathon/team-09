@@ -120,11 +120,32 @@ def _run_inference(input_tensor: np.ndarray) -> np.ndarray:
         outputs = _session.run(None, {input_name: input_tensor})
         probs = outputs[0][0]                   # shape: (5,)
     else:
-        # Demo mode — deterministic-ish random so results look realistic
-        rng = np.random.default_rng(seed=int(input_tensor.mean() * 1e6))
-        logits = rng.random(len(STRESS_CATEGORIES)).astype(np.float32)
-        exp = np.exp(logits - logits.max())
-        probs = exp / exp.sum()
+        # Demo mode — use image statistics as a deterministic seed so the same
+        # image always returns the same result, but different images vary.
+        # Build a *peaked* distribution (one confident winner at 0.65–0.90)
+        # so the result always passes the confidence threshold and shows a
+        # non-zero severity score.
+        seed = int(input_tensor.mean() * 1e6) ^ int(input_tensor.std() * 1e4)
+        rng = np.random.default_rng(seed=abs(seed))
+
+        # Pick a random winning class (skew away from index 0 = Healthy
+        # so demo shows interesting stress results more often)
+        weights = [0.10, 0.25, 0.25, 0.20, 0.20]          # P(each class)
+        winner = int(rng.choice(len(STRESS_CATEGORIES), p=weights))
+
+        # Assign winner a confidence in [0.65, 0.90], spread the rest
+        win_conf = float(rng.uniform(0.65, 0.90))
+        remainder = 1.0 - win_conf
+        others = rng.dirichlet(np.ones(len(STRESS_CATEGORIES) - 1)) * remainder
+
+        probs = np.empty(len(STRESS_CATEGORIES), dtype=np.float32)
+        other_idx = 0
+        for i in range(len(STRESS_CATEGORIES)):
+            if i == winner:
+                probs[i] = win_conf
+            else:
+                probs[i] = others[other_idx]
+                other_idx += 1
 
     return probs.astype(np.float32)
 
