@@ -41,7 +41,7 @@ function computeQuality(file, width, height) {
 export default function CropAppPage() {
   const inputRef = useRef(null)
   const audioRef = useRef(null)
-  const { t } = useTranslation()
+  const { t, lang } = useTranslation()
   const [profile, setProfile] = useState(DEFAULT_PROFILE)
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState('')
@@ -206,7 +206,7 @@ export default function CropAppPage() {
       const res = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text }),
+        body: JSON.stringify({ text, lang }),
       })
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}))
@@ -224,7 +224,7 @@ export default function CropAppPage() {
       setTtsState('error')
       setTtsError(err instanceof Error ? err.message : t('appTTSError'))
     }
-  }, [t])
+  }, [t, lang])
 
   const stopAudio = useCallback(() => {
     if (audioRef.current) {
@@ -234,15 +234,15 @@ export default function CropAppPage() {
     }
   }, [])
 
-  // Auto-play TTS whenever a new report arrives
+  // Auto-play TTS whenever a new report arrives (uses active language)
   useEffect(() => {
     if (!report) return
     const fullText = [
-      `Analysis complete. Detected ${report.stress_type}.`,
-      `Confidence: ${Math.round((report.confidence || 0) * 100)} percent.`,
-      `Recommendation: ${report.recommendation}`,
-      report.climate_alert && report.climate_alert !== 'No extreme weather conditions detected in your area.'
-        ? `Climate alert: ${report.climate_alert}`
+      `${t('appPrediction')}: ${report.stress_type}.`,
+      `${t('appConfidence')}: ${Math.round((report.confidence || 0) * 100)}%.`,
+      `${t('appRecommendation')}: ${report.recommendation}`,
+      report.climate_alert && report.climate_alert !== t('appNoAlert')
+        ? `${t('appClimateMessage')}: ${report.climate_alert}`
         : '',
     ].filter(Boolean).join(' ')
     speakRecommendation(fullText)
@@ -458,11 +458,11 @@ export default function CropAppPage() {
                 ttsState === 'playing'
                   ? stopAudio()
                   : speakRecommendation([
-                      `Analysis complete. Detected ${report.stress_type}.`,
-                      `Confidence: ${Math.round((report.confidence || 0) * 100)} percent.`,
-                      `Recommendation: ${report.recommendation}`,
-                      report.climate_alert && report.climate_alert !== 'No extreme weather conditions detected in your area.'
-                        ? `Climate alert: ${report.climate_alert}` : '',
+                      `${t('appPrediction')}: ${report.stress_type}.`,
+                      `${t('appConfidence')}: ${Math.round((report.confidence || 0) * 100)}%.`,
+                      `${t('appRecommendation')}: ${report.recommendation}`,
+                      report.climate_alert && report.climate_alert !== t('appNoAlert')
+                        ? `${t('appClimateMessage')}: ${report.climate_alert}` : '',
                     ].filter(Boolean).join(' '))
               }
               disabled={ttsState === 'loading'}
