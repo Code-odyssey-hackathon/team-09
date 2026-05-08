@@ -1,112 +1,6 @@
+import { db } from '../../../lib/supabase.js'
+import { supabase } from '../../../lib/supabase.js'
 import { NextResponse } from 'next/server'
-
-// Mock business plans data (duplicated for API isolation)
-const BUSINESS_PLANS = [
-  {
-    id: 'free',
-    name: 'Free Plan',
-    price: 0,
-    currency: 'INR',
-    interval: 'month',
-    features: [
-      '5 image analyses per month',
-      'Basic crop stress detection',
-      'Email support',
-      'Community access'
-    ],
-    limits: {
-      analysesPerMonth: 5,
-      concurrentUploads: 1,
-      storageDays: 30
-    }
-  },
-  {
-    id: 'starter',
-    name: 'Starter Plan',
-    price: 499,
-    currency: 'INR',
-    interval: 'month',
-    features: [
-      '50 image analyses per month',
-      'Advanced crop stress detection',
-      'Priority email support',
-      'Basic recommendations',
-      'Export reports',
-      '7-day history'
-    ],
-    limits: {
-      analysesPerMonth: 50,
-      concurrentUploads: 2,
-      storageDays: 7
-    },
-    popular: false
-  },
-  {
-    id: 'professional',
-    name: 'Professional Plan',
-    price: 1499,
-    currency: 'INR',
-    interval: 'month',
-    features: [
-      'Unlimited image analyses',
-      'Advanced AI recommendations',
-      'Priority phone & email support',
-      'Custom reports',
-      'API access',
-      '30-day history',
-      'Team collaboration'
-    ],
-    limits: {
-      analysesPerMonth: -1, // unlimited
-      concurrentUploads: 5,
-      storageDays: 30
-    },
-    popular: true
-  },
-  {
-    id: 'enterprise',
-    name: 'Enterprise Plan',
-    price: 4999,
-    currency: 'INR',
-    interval: 'month',
-    features: [
-      'Everything in Professional',
-      'Dedicated account manager',
-      'Custom integrations',
-      'Advanced analytics',
-      'SLA guarantee',
-      'Unlimited storage',
-      'White-label options'
-    ],
-    limits: {
-      analysesPerMonth: -1, // unlimited
-      concurrentUploads: 10,
-      storageDays: -1 // unlimited
-    },
-    popular: false
-  }
-]
-
-// Mock user subscriptions storage (in production, this would be a database)
-const USER_SUBSCRIPTIONS = new Map()
-
-// Mock subscription data structure
-function createSubscription(userId, planId) {
-  const plan = BUSINESS_PLANS.find(p => p.id === planId)
-  if (!plan) throw new Error('Plan not found')
-
-  return {
-    id: `sub-${Math.random().toString(36).substring(2, 14)}`,
-    userId,
-    planId,
-    status: 'active',
-    currentPeriodStart: Math.floor(Date.now() / 1000),
-    currentPeriodEnd: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60), // 30 days
-    cancelAtPeriodEnd: false,
-    createdAt: Math.floor(Date.now() / 1000),
-    plan: plan
-  }
-}
 
 export async function GET(request) {
   try {
@@ -120,20 +14,14 @@ export async function GET(request) {
       )
     }
 
-    const subscription = USER_SUBSCRIPTIONS.get(userId)
-
-    if (!subscription) {
-      return NextResponse.json({
-        subscription: null,
-        message: 'No active subscription found.'
-      })
-    }
+    const subscription = await db.getUserSubscription(userId)
 
     return NextResponse.json({
-      subscription,
-      message: 'Subscription retrieved successfully.'
+      subscription: subscription || null,
+      message: subscription ? 'Subscription retrieved successfully.' : 'No active subscription found.'
     })
   } catch (error) {
+    console.error('Subscriptions API error:', error)
     return NextResponse.json(
       { error: 'Failed to retrieve subscription.' },
       { status: 500 }
@@ -154,21 +42,44 @@ export async function POST(request) {
     }
 
     // Check if user already has a subscription
-    if (USER_SUBSCRIPTIONS.has(userId)) {
+    const existingSubscription = await db.getUserSubscription(userId)
+    if (existingSubscription) {
       return NextResponse.json(
         { error: 'User already has an active subscription.' },
         { status: 400 }
       )
     }
 
-    const subscription = createSubscription(userId, planId)
-    USER_SUBSCRIPTIONS.set(userId, subscription)
+    // Create subscription in database
+    const { data: subscription, error } = await supabase
+      .from('user_subscriptions')
+      .insert({
+        user_id: userId,
+        plan_id: planId,
+        status: 'active',
+        current_period_start: new Date().toISOString(),
+        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() // 30 days
+      })
+      .select(`
+        *,
+        subscription_plans (*)
+      `)
+      .single()
+
+    if (error) throw error
 
     return NextResponse.json({
       subscription,
       message: 'Subscription created successfully.'
     })
   } catch (error) {
+    console.error('Create subscription error:', error)
+    return NextResponse.json(
+      { error: 'Failed to create subscription.' },
+      { status: 500 }
+    )
+  }
+}
     return NextResponse.json(
       { error: error.message || 'Failed to create subscription.' },
       { status: 500 }

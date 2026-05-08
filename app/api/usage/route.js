@@ -1,28 +1,5 @@
+import { db } from '../../../lib/supabase.js'
 import { NextResponse } from 'next/server'
-
-// Mock usage tracking (in production, this would be a database)
-const USER_USAGE = new Map()
-
-function getCurrentMonthKey() {
-  const now = new Date()
-  return `${now.getFullYear()}-${now.getMonth() + 1}`
-}
-
-function getUserUsage(userId) {
-  const monthKey = getCurrentMonthKey()
-  const userKey = `${userId}-${monthKey}`
-
-  if (!USER_USAGE.has(userKey)) {
-    USER_USAGE.set(userKey, {
-      userId,
-      month: monthKey,
-      analysesCount: 0,
-      lastAnalysisAt: null
-    })
-  }
-
-  return USER_USAGE.get(userKey)
-}
 
 export async function GET(request) {
   try {
@@ -36,15 +13,43 @@ export async function GET(request) {
       )
     }
 
-    const usage = getUserUsage(userId)
+    const usage = await db.getUserUsage(userId)
 
     return NextResponse.json({
       usage,
       message: 'Usage data retrieved successfully.'
     })
   } catch (error) {
+    console.error('Usage API error:', error)
     return NextResponse.json(
       { error: 'Failed to retrieve usage data.' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function POST(request) {
+  try {
+    const data = await request.json()
+    const { userId } = data
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User ID is required.' },
+        { status: 400 }
+      )
+    }
+
+    const usage = await db.incrementUsage(userId)
+
+    return NextResponse.json({
+      usage,
+      message: 'Usage incremented successfully.'
+    })
+  } catch (error) {
+    console.error('Increment usage error:', error)
+    return NextResponse.json(
+      { error: 'Failed to increment usage.' },
       { status: 500 }
     )
   }

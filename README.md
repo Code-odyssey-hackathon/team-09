@@ -81,14 +81,33 @@ Crop stress — caused by drought, nutrient deficiencies, pests, and fungal infe
 
 | Layer | Technology |
 |---|---|
+| **Database** | Supabase (PostgreSQL + Auth + Real-time) |
 | **ML Model** | MobileNetV2 (ImageNet pre-trained, PlantVillage fine-tuned) |
 | **Inference** | TensorFlow 2.15 (CPU) + NumPy + Pillow |
-| **Backend** | Python 3.11 Serverless Functions (Vercel) |
-| **Frontend** | Vanilla HTML/CSS/JS, Inter + Space Grotesk fonts |
+| **Backend** | Python 3.11 + Next.js Serverless Functions (Vercel) |
+| **Frontend** | Next.js + React, Inter + Space Grotesk fonts |
+| **Authentication** | Supabase Auth |
 | **Climate API** | OpenWeatherMap Current Weather (free tier) |
+| **Text-to-Speech** | ElevenLabs API |
 | **Deployment** | Vercel (auto-scaling, edge network) |
 
 ---
+
+## Database Schema
+
+The app uses Supabase (PostgreSQL) to store:
+
+- **User Profiles** (`profiles`) - Extended user information
+- **Usage Tracking** (`usage_tracking`) - Monthly analysis counts per user
+- **Subscription Plans** (`subscription_plans`) - Available pricing tiers
+- **User Subscriptions** (`user_subscriptions`) - Active user plans
+- **Analysis History** (`analysis_history`) - Past crop stress diagnoses
+
+**Key Features:**
+- Row Level Security (RLS) enabled for data privacy
+- Automatic user profile creation on signup
+- Monthly usage reset logic
+- Subscription-based access control
 
 ## Getting Started
 
@@ -96,7 +115,21 @@ Crop stress — caused by drought, nutrient deficiencies, pests, and fungal infe
 
 - **Python 3.11+**
 - **Node.js 18+** and **npm**
+- **Supabase account** (for database functionality)
 - *(Optional)* [OpenWeatherMap API key](https://openweathermap.org/api) for climate alerts
+- *(Optional)* [ElevenLabs API key](https://elevenlabs.io) for text-to-speech
+
+### Database Setup
+
+1. **Create a Supabase project** at [supabase.com](https://supabase.com)
+2. **Go to your project's SQL Editor** and run the schema from `supabase-schema.sql`
+3. **Get your project credentials** from Settings → API
+4. **Set up environment variables** by copying `.env.example` to `.env.local` and filling in your values:
+
+```bash
+cp .env.example .env.local
+# Edit .env.local with your Supabase URL and keys
+```
 
 ### Local Development
 
@@ -105,11 +138,10 @@ Crop stress — caused by drought, nutrient deficiencies, pests, and fungal infe
 git clone https://github.com/Code-odyssey-hackathon/team-09.git
 cd team-09
 
-# 2. Install Vercel CLI
+# 2. Install dependencies
 npm install
 
-# 3. (Optional) Set up climate API key
-export OPENWEATHERMAP_KEY="your_api_key_here"
+# 3. Set up environment variables (see Database Setup above)
 
 # 4. Run the development server
 npx vercel dev

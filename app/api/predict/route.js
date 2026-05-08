@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { db } from '../../../lib/supabase.js'
 
 const STRESS_CATEGORIES = [
   'Healthy',
@@ -50,39 +51,32 @@ export async function POST(request) {
     if (userId !== 'anonymous') {
       try {
         // Get user's subscription
-        const subscriptionResponse = await fetch(`${request.nextUrl.origin}/api/subscriptions?userId=${userId}`)
-        const subscriptionData = await subscriptionResponse.json()
+        const subscription = await db.getUserSubscription(userId)
+        const usage = await db.getUserUsage(userId)
 
-        if (subscriptionData.subscription) {
-          const plan = subscriptionData.subscription.plan
-
-          // Get current usage
-          const usageResponse = await fetch(`${request.nextUrl.origin}/api/usage?userId=${userId}`)
-          const usageData = await usageResponse.json()
+        if (subscription) {
+          const plan = subscription.subscription_plans
 
           // Check if user has exceeded their limit
-          if (plan.limits.analysesPerMonth !== -1 && usageData.usage.analysesCount >= plan.limits.analysesPerMonth) {
+          if (plan.limits.analysesPerMonth !== -1 && usage.analyses_count >= plan.limits.analysesPerMonth) {
             return NextResponse.json(
               {
                 error: 'Monthly analysis limit exceeded. Please upgrade your plan or wait for the next billing cycle.',
                 limit: plan.limits.analysesPerMonth,
-                used: usageData.usage.analysesCount,
+                used: usage.analyses_count,
                 planName: plan.name
               },
               { status: 429 }
             )
           }
         } else {
-          // Free plan check
-          const usageResponse = await fetch(`${request.nextUrl.origin}/api/usage?userId=${userId}`)
-          const usageData = await usageResponse.json()
-
-          if (usageData.usage.analysesCount >= 5) { // Free plan limit
+          // Free plan check (5 analyses per month)
+          if (usage.analyses_count >= 5) {
             return NextResponse.json(
               {
                 error: 'Free plan limit exceeded. Please upgrade to continue using the service.',
                 limit: 5,
-                used: usageData.usage.analysesCount,
+                used: usage.analyses_count,
                 planName: 'Free Plan'
               },
               { status: 429 }
@@ -92,20 +86,6 @@ export async function POST(request) {
       } catch (error) {
         console.error('Subscription check error:', error)
         // Continue with analysis if subscription check fails
-      }
-    }
-
-    // Record usage for authenticated users
-    if (userId !== 'anonymous') {
-      try {
-        await fetch(`${request.nextUrl.origin}/api/usage`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userId })
-        })
-      } catch (error) {
-        console.error('Usage recording error:', error)
-        // Continue with analysis if usage recording fails
       }
     }
 
@@ -123,6 +103,24 @@ export async function POST(request) {
       climate_alert: 'No extreme weather conditions detected in your area.',
       model_version: 'v1.0',
       processing_time_ms: Math.floor(Math.random() * 500) + 200,
+    }
+
+    // Record usage and save analysis for authenticated users
+    if (userId !== 'anonymous') {
+      try {
+        await db.incrementUsage(userId)
+        await db.saveAnalysis(userId, {
+          stress_type: stressType,
+          severity: severity,
+          confidence: confidence,
+          recommendation: response.recommendation,
+          climate_alert: response.climate_alert,
+          inference_time_ms: response.processing_time_ms
+        })
+      } catch (error) {
+        console.error('Database update error:', error)
+        // Continue with response if database update fails
+      }
     }
 
     return NextResponse.json(response)
