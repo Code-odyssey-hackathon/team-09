@@ -45,6 +45,7 @@ export default function CropAppPage() {
   const [profile, setProfile] = useState(DEFAULT_PROFILE)
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState('')
+  const [previewBase64, setPreviewBase64] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [report, setReport] = useState(null)
@@ -114,6 +115,11 @@ export default function CropAppPage() {
     setPreviewUrl(objectUrl)
     setReport(null)
 
+    // Convert to base64 for history persistence
+    const reader = new FileReader()
+    reader.onload = (e) => setPreviewBase64(e.target.result)
+    reader.readAsDataURL(nextFile)
+
     const image = new Image()
     image.onload = () => {
       const score = computeQuality(nextFile, image.width, image.height)
@@ -142,6 +148,7 @@ export default function CropAppPage() {
   const resetFile = () => {
     setFile(null)
     setPreviewUrl('')
+    setPreviewBase64('')
     setMeta({ resolution: '-', size: '-', aspect: '-', score: 0 })
     setReport(null)
     setError('')
@@ -185,6 +192,7 @@ export default function CropAppPage() {
         confidence: data.confidence || 0,
         severity: data.severity || 0,
         recommendation: data.recommendation || '',
+        imageBase64: previewBase64 || null,
       })
     } catch (err) {
       setError(err instanceof Error ? err.message : t('appAPIError'))
@@ -520,7 +528,15 @@ export default function CropAppPage() {
               <article key={item.id} className="history-item">
                 <div className="history-row">
                   <div className="history-content">
-                    <span className="history-leaf">🌿</span>
+                    {item.imageBase64 ? (
+                      <img
+                        className="history-thumb"
+                        src={item.imageBase64}
+                        alt={item.stress_type}
+                      />
+                    ) : (
+                      <span className="history-leaf">🌿</span>
+                    )}
                     <div>
                       <p className="history-title">{item.stress_type}</p>
                       <p className="history-meta">{new Date(item.createdAt).toLocaleString()}</p>
