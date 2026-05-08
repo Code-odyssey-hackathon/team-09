@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { jsPDF } from 'jspdf'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from '../../components/TranslationContext'
 
@@ -271,13 +272,39 @@ export default function CropAppPage() {
 
   const downloadReport = () => {
     if (!report) return
-    const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const anchor = document.createElement('a')
-    anchor.href = url
-    anchor.download = 'crop-report.json'
-    anchor.click()
-    URL.revokeObjectURL(url)
+
+    const doc = new jsPDF({ unit: 'pt', format: 'a4' })
+    const margin = 40
+    const lineHeight = 18
+    let y = margin
+
+    doc.setFontSize(20)
+    doc.text('Crop Stress Analysis Report', margin, y)
+    y += 30
+    doc.setFontSize(12)
+
+    const addField = (label, value) => {
+      const text = `${label}: ${value}`
+      const lines = doc.splitTextToSize(text, 520)
+      doc.text(lines, margin, y)
+      y += lines.length * lineHeight
+      if (y > 750) {
+        doc.addPage()
+        y = margin
+      }
+    }
+
+    addField('Prediction', report.stress_type || 'Unknown')
+    addField('Confidence', report.confidence != null ? `${Math.round(report.confidence * 100)}%` : 'N/A')
+    addField('Severity', report.severity != null ? report.severity : 'N/A')
+    addField('Recommendation', report.recommendation || 'N/A')
+    if (report.climate_alert) {
+      addField('Climate alert', report.climate_alert)
+    }
+    addField('Model version', report.model_version || 'N/A')
+    addField('Processing time', report.processing_time_ms != null ? `${report.processing_time_ms} ms` : 'N/A')
+
+    doc.save('crop-report.pdf')
   }
 
   const copyReport = async () => {
