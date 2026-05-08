@@ -1,5 +1,4 @@
 {
-  "name": "ai-crop-stress-whisperer",
   "outputDirectory": "public",
   "functions": {
     "api/**/*.py": {

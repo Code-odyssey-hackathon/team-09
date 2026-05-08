@@ -1,10 +1,15 @@
 """
 AI Crop Stress Whisperer — Prediction Serverless Function
 
-Accepts a multipart POST with an image file, runs MobileNetV2 inference
-fine-tuned on PlantVillage, and returns structured stress diagnostics.
+Accepts a multipart POST with an image file, runs MobileNetV2 ONNX inference,
+and returns structured stress diagnostics.
 
-Deployed as a Vercel Serverless Function (Python 3.11 + tensorflow-cpu).
+Model strategy:
+  1. If api/model/model.onnx exists → run real ONNX inference.
+  2. Otherwise → softmax over random logits (demo / first-deploy mode).
+
+Deployed as a Vercel Serverless Function (Python 3.11 + onnxruntime).
+Bundle size: ~100 MB  (well under Vercel's 500 MB Lambda limit).
 """
 
 from __future__ import annotations
@@ -42,57 +47,44 @@ ALLOWED_CONTENT_TYPES: set[str] = {
 }
 
 # ---------------------------------------------------------------------------
-# Model loading — happens ONCE per cold start, reused across warm invocations
+# Model loading — once per cold start, reused across warm invocations
 # ---------------------------------------------------------------------------
 
-_model = None
+_session = None   # onnxruntime.InferenceSession
+_demo_mode = False
 
 
 def _load_model():
     """
-    Load the MobileNetV2-based crop stress classifier.
+    Load the MobileNetV2 ONNX model.
 
-    Strategy:
-    1. If a fine-tuned model exists at MODEL_PATH env var or ./model/, load it.
-    2. Otherwise, build a MobileNetV2 base with a fresh classification head
-       (useful for first deploy / demo before the fine-tuned weights are ready).
+    Falls back to demo mode (random softmax) if the ONNX file is absent,
+    so the API stays functional during development / first deploy.
     """
-    global _model
+    global _session, _demo_mode
 
-    if _model is not None:
-        return _model
+    if _session is not None or _demo_mode:
+        return
 
-    import tensorflow as tf
-
-    model_path = os.environ.get("MODEL_PATH", os.path.join(os.path.dirname(__file__), "model"))
+    model_path = os.environ.get(
+        "MODEL_PATH",
+        os.path.join(os.path.dirname(__file__), "model", "model.onnx"),
+    )
 
     if os.path.exists(model_path):
         try:
-            _model = tf.keras.models.load_model(model_path, compile=False)
-            print(f"[predict] Loaded fine-tuned model from {model_path}")
-            return _model
+            import onnxruntime as ort
+            opts = ort.SessionOptions()
+            opts.inter_op_num_threads = 1
+            opts.intra_op_num_threads = 1
+            _session = ort.InferenceSession(model_path, sess_options=opts)
+            print(f"[predict] Loaded ONNX model from {model_path}")
         except Exception as exc:
-            print(f"[predict] Failed to load model from {model_path}: {exc}")
-
-    # Fallback: build a demo architecture (MobileNetV2 + classification head)
-    print("[predict] Building demo MobileNetV2 classifier (no fine-tuned weights)")
-    base = tf.keras.applications.MobileNetV2(
-        input_shape=(224, 224, 3),
-        include_top=False,
-        weights="imagenet",
-        pooling="avg",
-    )
-    base.trainable = False
-
-    _model = tf.keras.Sequential([
-        base,
-        tf.keras.layers.Dropout(0.3),
-        tf.keras.layers.Dense(128, activation="relu"),
-        tf.keras.layers.Dropout(0.2),
-        tf.keras.layers.Dense(len(STRESS_CATEGORIES), activation="softmax"),
-    ])
-    _model.build(input_shape=(None, 224, 224, 3))
-    return _model
+            print(f"[predict] Failed to load ONNX model: {exc}. Using demo mode.")
+            _demo_mode = True
+    else:
+        print("[predict] No ONNX model found — running in demo mode.")
+        _demo_mode = True
 
 
 # Eagerly load on cold start
@@ -106,12 +98,35 @@ _load_model()
 def _preprocess_image(image_bytes: bytes) -> np.ndarray:
     """
     Decode image bytes → PIL Image → resize to 224×224 → normalise to [0, 1].
-    Returns a batch-ready numpy array of shape (1, 224, 224, 3).
+    Returns a batch-ready float32 array of shape (1, 224, 224, 3).
     """
     img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
     img = img.resize(IMAGE_SIZE, Image.LANCZOS)
     arr = np.array(img, dtype=np.float32) / 255.0
-    return np.expand_dims(arr, axis=0)
+    return np.expand_dims(arr, axis=0)          # shape: (1, 224, 224, 3)
+
+
+# ---------------------------------------------------------------------------
+# Inference
+# ---------------------------------------------------------------------------
+
+def _run_inference(input_tensor: np.ndarray) -> np.ndarray:
+    """
+    Run inference and return a probability array of shape (5,).
+    Uses the ONNX session when available, otherwise softmax over random logits.
+    """
+    if _session is not None:
+        input_name = _session.get_inputs()[0].name
+        outputs = _session.run(None, {input_name: input_tensor})
+        probs = outputs[0][0]                   # shape: (5,)
+    else:
+        # Demo mode — deterministic-ish random so results look realistic
+        rng = np.random.default_rng(seed=int(input_tensor.mean() * 1e6))
+        logits = rng.random(len(STRESS_CATEGORIES)).astype(np.float32)
+        exp = np.exp(logits - logits.max())
+        probs = exp / exp.sum()
+
+    return probs.astype(np.float32)
 
 
 # ---------------------------------------------------------------------------
@@ -120,39 +135,37 @@ def _preprocess_image(image_bytes: bytes) -> np.ndarray:
 
 def _estimate_severity(stress_type: str, confidence: float) -> int:
     """
-    Map stress type + confidence to a 0-100 severity score.
-    Healthy → 0.  Others scale with confidence.
+    Map stress type + confidence → 0–100 severity score.
+    Healthy → 0. Others scale linearly with confidence within a type-specific range.
     """
     if stress_type == "Healthy":
         return 0
 
     severity_weights: dict[str, tuple[int, int]] = {
-        "Drought Stress":       (40, 95),
-        "Nutrient Deficiency":  (30, 80),
-        "Pest Attack":          (50, 100),
-        "Fungal Disease":       (45, 95),
+        "Drought Stress":      (40, 95),
+        "Nutrient Deficiency": (30, 80),
+        "Pest Attack":         (50, 100),
+        "Fungal Disease":      (45, 95),
     }
     low, high = severity_weights.get(stress_type, (30, 90))
-    severity = int(low + (high - low) * confidence)
-    return min(severity, 100)
+    return min(int(low + (high - low) * confidence), 100)
 
 
 # ---------------------------------------------------------------------------
-# Multipart parser (Vercel provides raw body — no framework)
+# Multipart parser (Vercel delivers raw body — no framework)
 # ---------------------------------------------------------------------------
 
-def _extract_file_from_multipart(body: bytes, content_type: str) -> tuple[bytes | None, str | None]:
+def _extract_file_from_multipart(
+    body: bytes, content_type: str
+) -> tuple[bytes | None, str | None]:
     """
-    Minimal multipart/form-data parser that extracts the first file field
-    named 'file'. Returns (file_bytes, mime_type) or (None, None).
+    Minimal multipart/form-data parser — extracts the first 'file' field.
+    Returns (file_bytes, mime_type) or (None, None).
     """
     if "boundary=" not in content_type:
         return None, None
 
-    boundary = content_type.split("boundary=")[-1].strip()
-    if boundary.startswith('"') and boundary.endswith('"'):
-        boundary = boundary[1:-1]
-
+    boundary = content_type.split("boundary=")[-1].strip().strip('"')
     delimiter = f"--{boundary}".encode()
     parts = body.split(delimiter)
 
@@ -160,7 +173,6 @@ def _extract_file_from_multipart(body: bytes, content_type: str) -> tuple[bytes 
         if b'name="file"' not in part:
             continue
 
-        # Split headers from body (double CRLF)
         header_end = part.find(b"\r\n\r\n")
         if header_end == -1:
             continue
@@ -168,15 +180,11 @@ def _extract_file_from_multipart(body: bytes, content_type: str) -> tuple[bytes 
         headers_raw = part[:header_end].decode("utf-8", errors="replace")
         file_data = part[header_end + 4:]
 
-        # Strip trailing \r\n-- from last boundary
-        if file_data.endswith(b"\r\n"):
-            file_data = file_data[:-2]
-        if file_data.endswith(b"--"):
-            file_data = file_data[:-2]
-        if file_data.endswith(b"\r\n"):
-            file_data = file_data[:-2]
+        # Strip trailing boundary markers
+        for suffix in (b"--", b"\r\n"):
+            if file_data.endswith(suffix):
+                file_data = file_data[: -len(suffix)]
 
-        # Detect MIME type from Content-Type header or filename
         mime = "application/octet-stream"
         for line in headers_raw.split("\r\n"):
             if line.lower().startswith("content-type:"):
@@ -189,7 +197,7 @@ def _extract_file_from_multipart(body: bytes, content_type: str) -> tuple[bytes 
 
 
 # ---------------------------------------------------------------------------
-# HTTP Handler (Vercel Serverless Function interface)
+# HTTP Handler
 # ---------------------------------------------------------------------------
 
 class handler(BaseHTTPRequestHandler):
@@ -199,30 +207,26 @@ class handler(BaseHTTPRequestHandler):
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
         self.wfile.write(json.dumps(data).encode("utf-8"))
 
     def do_OPTIONS(self):
-        """Handle CORS preflight."""
         self._send_json(200, {"status": "ok"})
 
     def do_GET(self):
-        """Health check endpoint."""
         self._send_json(200, {
             "service": "AI Crop Stress Whisperer",
-            "version": "1.0.0",
+            "version": "1.1.0",
+            "runtime": "onnxruntime" if not _demo_mode else "demo",
             "status": "ready",
             "categories": STRESS_CATEGORIES,
         })
 
     def do_POST(self):
-        """
-        Accept multipart image upload, run inference, return diagnostics.
-        """
+        """Accept multipart image upload, run inference, return diagnostics."""
         try:
-            # --- Read body ---
             content_length = int(self.headers.get("Content-Length", 0))
             if content_length == 0:
                 self._send_json(400, {"error": "Empty request body."})
@@ -231,7 +235,6 @@ class handler(BaseHTTPRequestHandler):
             body = self.rfile.read(content_length)
             content_type = self.headers.get("Content-Type", "")
 
-            # --- Validate multipart ---
             if "multipart/form-data" not in content_type:
                 self._send_json(400, {
                     "error": "Expected multipart/form-data with a 'file' field.",
@@ -246,7 +249,6 @@ class handler(BaseHTTPRequestHandler):
                 })
                 return
 
-            # --- Validate image type ---
             if mime_type not in ALLOWED_CONTENT_TYPES:
                 self._send_json(400, {
                     "error": (
@@ -256,7 +258,6 @@ class handler(BaseHTTPRequestHandler):
                 })
                 return
 
-            # --- Preprocess ---
             try:
                 input_tensor = _preprocess_image(file_bytes)
             except Exception:
@@ -265,52 +266,41 @@ class handler(BaseHTTPRequestHandler):
                 })
                 return
 
-            # --- Inference ---
-            model = _load_model()
-            predictions = model.predict(input_tensor, verbose=0)
-            probs = predictions[0]
-
+            probs = _run_inference(input_tensor)
             predicted_idx = int(np.argmax(probs))
             confidence = float(probs[predicted_idx])
             stress_type = STRESS_CATEGORIES[predicted_idx]
 
-            # --- Low-confidence guard ---
+            from api.climate import get_climate_alert
+            lat = self.headers.get("X-Latitude")
+            lon = self.headers.get("X-Longitude")
+            climate_alert = get_climate_alert(lat, lon)
+
             if confidence < CONFIDENCE_THRESHOLD:
-                from api.climate import get_climate_alert
-
-                lat = self.headers.get("X-Latitude")
-                lon = self.headers.get("X-Longitude")
-
                 self._send_json(200, {
                     "stress_type": stress_type,
                     "severity": 0,
                     "confidence": round(confidence, 4),
                     "recommendation": (
-                        "Low confidence prediction — the model is not certain about "
-                        "this diagnosis. Please upload a clearer, well-lit photo of "
-                        "the affected leaf or plant area for a more reliable analysis."
+                        "Low confidence — the model is uncertain about this image. "
+                        "Please upload a clearer, well-lit photo of the affected "
+                        "leaf or plant area for a more reliable diagnosis."
                     ),
-                    "climate_alert": get_climate_alert(lat, lon),
+                    "climate_alert": climate_alert,
                     "low_confidence": True,
+                    "demo_mode": _demo_mode,
                 })
                 return
 
-            # --- Build full response ---
             from api.recommender import get_recommendation
-            from api.climate import get_climate_alert
-
-            severity = _estimate_severity(stress_type, confidence)
-
-            lat = self.headers.get("X-Latitude")
-            lon = self.headers.get("X-Longitude")
-
             self._send_json(200, {
                 "stress_type": stress_type,
-                "severity": severity,
+                "severity": _estimate_severity(stress_type, confidence),
                 "confidence": round(confidence, 4),
                 "recommendation": get_recommendation(stress_type),
-                "climate_alert": get_climate_alert(lat, lon),
+                "climate_alert": climate_alert,
                 "low_confidence": False,
+                "demo_mode": _demo_mode,
             })
 
         except Exception:
