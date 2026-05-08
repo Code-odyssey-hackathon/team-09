@@ -328,7 +328,8 @@ async function submitAuth(endpoint, payload, button, message) {
     }
 
     localStorage.setItem('cw_demo_auth', JSON.stringify(data));
-    showAlert('success', data.message || 'Success. You are signed in.');
+    showAlert('success', data.message || 'Success. Redirecting...');
+    window.location.href = '/app';
   } catch (err) {
     showAlert('error', err.message || 'Something went wrong.');
   } finally {
