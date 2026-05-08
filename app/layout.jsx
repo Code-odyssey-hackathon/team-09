@@ -1,5 +1,6 @@
 import '../styles/globals.css'
 import { ThemeProvider } from '../components/ThemeProvider'
+import { TranslationProvider } from '../components/TranslationContext'
 import Navigation from '../components/Navigation'
 
 export const metadata = {
@@ -12,8 +13,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <ThemeProvider>
-          <Navigation />
-          {children}
+          <TranslationProvider>
+            <Navigation />
+            {children}
+          </TranslationProvider>
         </ThemeProvider>
       </body>
     </html>

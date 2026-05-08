@@ -2,42 +2,9 @@
 
 import Link from 'next/link'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from '../../components/TranslationContext'
 
-const STRESS_CATEGORIES = [
-  'Healthy',
-  'Drought Stress',
-  'Nutrient Deficiency',
-  'Pest Attack',
-  'Fungal Disease',
-]
-
-const STRESS_ACTIONS = {
-  Healthy: [
-    'Maintain current irrigation schedule',
-    'Monitor weekly for early changes',
-    'Keep leaves dry overnight',
-  ],
-  'Drought Stress': [
-    'Check soil moisture at root depth',
-    'Irrigate early morning or late evening',
-    'Add mulch to reduce evaporation',
-  ],
-  'Nutrient Deficiency': [
-    'Run a soil or leaf test',
-    'Apply balanced fertilizer after testing',
-    'Inspect for uneven growth patterns',
-  ],
-  'Pest Attack': [
-    'Inspect underside of leaves',
-    'Remove heavily infested foliage',
-    'Consider targeted bio-control',
-  ],
-  'Fungal Disease': [
-    'Remove infected leaves safely',
-    'Improve airflow between plants',
-    'Apply approved fungicide if needed',
-  ],
-}
+const STAGE_KEYS = ['Seedling', 'Vegetative', 'Flowering', 'Fruiting']
 
 const DEFAULT_PROFILE = {
   crop: '',
@@ -73,7 +40,8 @@ function computeQuality(file, width, height) {
 
 export default function CropAppPage() {
   const inputRef = useRef(null)
-  const audioRef = useRef(null)           // holds the currently-playing Audio object
+  const audioRef = useRef(null)
+  const { t } = useTranslation()
   const [profile, setProfile] = useState(DEFAULT_PROFILE)
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState('')
@@ -83,7 +51,6 @@ export default function CropAppPage() {
   const [history, setHistory] = useState([])
   const [meta, setMeta] = useState({ resolution: '-', size: '-', aspect: '-', score: 0 })
   const [dragOver, setDragOver] = useState(false)
-  // ttsState: 'idle' | 'loading' | 'playing' | 'done' | 'error'
   const [ttsState, setTtsState] = useState('idle')
   const [ttsError, setTtsError] = useState('')
 
@@ -128,17 +95,17 @@ export default function CropAppPage() {
   }, [previewUrl])
 
   const qualityLabel = useMemo(() => {
-    if (meta.score >= 80) return 'Excellent'
-    if (meta.score >= 55) return 'Good'
-    if (meta.score >= 30) return 'Fair'
-    return 'Poor'
-  }, [meta.score])
+    if (meta.score >= 80) return t('appQualityExcellent')
+    if (meta.score >= 55) return t('appQualityGood')
+    if (meta.score >= 30) return t('appQualityFair')
+    return t('appQualityPoor')
+  }, [meta.score, t])
 
   const handleFile = (nextFile) => {
     setError('')
     if (!nextFile) return
     if (!['image/jpeg', 'image/png', 'image/webp', 'image/bmp'].includes(nextFile.type)) {
-      setError('Upload a JPEG, PNG, WebP, or BMP image.')
+      setError(t('appUploadError'))
       return
     }
 
@@ -190,7 +157,7 @@ export default function CropAppPage() {
 
   const runAnalysis = async () => {
     if (!file) {
-      setError('Please upload an image before analysing.')
+      setError(t('appNoFileError'))
       return
     }
     setLoading(true)
@@ -220,7 +187,7 @@ export default function CropAppPage() {
         recommendation: data.recommendation || '',
       })
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Unable to reach the API.')
+      setError(err instanceof Error ? err.message : t('appAPIError'))
     } finally {
       setLoading(false)
     }
@@ -229,7 +196,6 @@ export default function CropAppPage() {
   // ── TTS ──────────────────────────────────────────────────────────────────
   const speakRecommendation = useCallback(async (text) => {
     if (!text) return
-    // Stop any audio already playing
     if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current = null
@@ -252,13 +218,13 @@ export default function CropAppPage() {
       audioRef.current = audio
       audio.onplay  = () => setTtsState('playing')
       audio.onended = () => { setTtsState('done'); URL.revokeObjectURL(url) }
-      audio.onerror = () => { setTtsState('error'); setTtsError('Playback failed.'); URL.revokeObjectURL(url) }
+      audio.onerror = () => { setTtsState('error'); setTtsError(t('appPlaybackError')); URL.revokeObjectURL(url) }
       audio.play()
     } catch (err) {
       setTtsState('error')
-      setTtsError(err instanceof Error ? err.message : 'Audio generation failed.')
+      setTtsError(err instanceof Error ? err.message : t('appTTSError'))
     }
-  }, [])
+  }, [t])
 
   const stopAudio = useCallback(() => {
     if (audioRef.current) {
@@ -307,11 +273,11 @@ export default function CropAppPage() {
     <main className="page-shell">
       <div className="section-header">
         <div>
-          <p className="eyebrow">Crop diagnosis</p>
-          <h1>Analyze photos and receive instant recommendations.</h1>
+          <p className="eyebrow">{t('appEyebrow')}</p>
+          <h1>{t('appH1')}</h1>
         </div>
         <Link href="/auth" className="btn btn-outline">
-          Demo login
+          {t('appDemoLogin')}
         </Link>
       </div>
 
@@ -338,8 +304,8 @@ export default function CropAppPage() {
               }}
             />
             <div>
-              <p className="drop-title">Drop a leaf image or click to browse</p>
-              <p className="drop-sub">JPEG, PNG, WebP, BMP supported</p>
+              <p className="drop-title">{t('appDropTitle')}</p>
+              <p className="drop-sub">{t('appDropSub')}</p>
             </div>
           </div>
 
@@ -348,10 +314,10 @@ export default function CropAppPage() {
               <img className="preview-img" src={previewUrl} alt="Leaf preview" />
               <div className="preview-actions">
                 <button className="btn btn-primary" onClick={runAnalysis} disabled={loading}>
-                  {loading ? 'Analysing…' : 'Analyze photo'}
+                  {loading ? t('appAnalysing') : t('appAnalyze')}
                 </button>
                 <button className="btn btn-ghost" onClick={resetFile} type="button">
-                  Clear
+                  {t('appClear')}
                 </button>
               </div>
             </div>
@@ -359,13 +325,13 @@ export default function CropAppPage() {
 
           <div className="panel-grid">
             <div className="field">
-              <label className="label">Crop type</label>
+              <label className="label">{t('appCropType')}</label>
               <select
                 value={profile.crop}
                 onChange={(event) => saveProfileField('crop', event.target.value)}
                 className="input"
               >
-                <option value="">Select crop</option>
+                <option value="">{t('appSelectCrop')}</option>
                 <option>Tomato</option>
                 <option>Potato</option>
                 <option>Corn</option>
@@ -376,9 +342,9 @@ export default function CropAppPage() {
               </select>
             </div>
             <div className="field">
-              <label className="label">Stage</label>
+              <label className="label">{t('appStage')}</label>
               <div className="toggle-group">
-                {['Seedling', 'Vegetative', 'Flowering', 'Fruiting'].map((stage) => (
+                {STAGE_KEYS.map((stage) => (
                   <button
                     key={stage}
                     type="button"
@@ -391,27 +357,27 @@ export default function CropAppPage() {
               </div>
             </div>
             <div className="field">
-              <label className="label">Irrigation</label>
+              <label className="label">{t('appIrrigation')}</label>
               <select
                 value={profile.irrigation}
                 onChange={(event) => saveProfileField('irrigation', event.target.value)}
                 className="input"
               >
-                <option value="">Select schedule</option>
-                <option>Rainfed</option>
-                <option>Weekly</option>
-                <option>2-3x weekly</option>
-                <option>Daily</option>
-                <option>Drip</option>
+                <option value="">{t('appSelectSchedule')}</option>
+                <option>{t('appRainfed')}</option>
+                <option>{t('appWeekly')}</option>
+                <option>{t('appTwiceWeekly')}</option>
+                <option>{t('appDaily')}</option>
+                <option>{t('appDrip')}</option>
               </select>
             </div>
             <div className="field">
-              <label className="label">Field notes</label>
+              <label className="label">{t('appFieldNotes')}</label>
               <textarea
                 value={profile.notes}
                 onChange={(event) => saveProfileField('notes', event.target.value)}
                 className="input textarea"
-                placeholder="Heatwave last week, new fertilizer applied, etc."
+                placeholder={t('appFieldNotesPlaceholder')}
               />
             </div>
           </div>
@@ -419,20 +385,20 @@ export default function CropAppPage() {
 
         <article className="card status-card">
           <div>
-            <p className="section-title">Image quality</p>
-            <h2>Photo readiness</h2>
+            <p className="section-title">{t('appImageQuality')}</p>
+            <h2>{t('appPhotoReadiness')}</h2>
           </div>
           <div className="meta-grid">
             <div className="meta-item">
-              <span className="meta-label">Resolution</span>
+              <span className="meta-label">{t('appResolution')}</span>
               <span>{meta.resolution}</span>
             </div>
             <div className="meta-item">
-              <span className="meta-label">File size</span>
+              <span className="meta-label">{t('appFileSize')}</span>
               <span>{meta.size}</span>
             </div>
             <div className="meta-item">
-              <span className="meta-label">Aspect</span>
+              <span className="meta-label">{t('appAspect')}</span>
               <span>{meta.aspect}</span>
             </div>
           </div>
@@ -446,9 +412,9 @@ export default function CropAppPage() {
             </div>
           </div>
           <ul className="quality-notes">
-            <li>Use a close-up photo of a single leaf.</li>
-            <li>Avoid glare and shadows for best prediction accuracy.</li>
-            <li>Upload bright, centered images for reliable results.</li>
+            <li>{t('appQualityNote1')}</li>
+            <li>{t('appQualityNote2')}</li>
+            <li>{t('appQualityNote3')}</li>
           </ul>
         </article>
       </section>
@@ -459,23 +425,23 @@ export default function CropAppPage() {
         <section className="result-section">
           <div className="result-header">
             <div>
-              <p className="section-title">Prediction</p>
+              <p className="section-title">{t('appPrediction')}</p>
               <h2>{report.stress_type || 'Unknown'}</h2>
             </div>
-            <span className="badge">Severity {report.severity ?? '—'}</span>
+            <span className="badge">{t('appSeverity')} {report.severity ?? '—'}</span>
           </div>
           <div className="result-grid">
             <div className="result-card">
-              <p className="result-label">Confidence</p>
+              <p className="result-label">{t('appConfidence')}</p>
               <strong>{Math.round((report.confidence || 0) * 100)}%</strong>
             </div>
             <div className="result-card">
-              <p className="result-label">Recommendation</p>
+              <p className="result-label">{t('appRecommendation')}</p>
               <p>{report.recommendation}</p>
             </div>
             <div className="result-card">
-              <p className="result-label">Climate message</p>
-              <p>{report.climate_alert || 'No alert detected.'}</p>
+              <p className="result-label">{t('appClimateMessage')}</p>
+              <p>{report.climate_alert || t('appNoAlert')}</p>
             </div>
           </div>
           <div className="action-row">
@@ -487,7 +453,7 @@ export default function CropAppPage() {
                 ttsState === 'playing' ? 'btn-tts--playing' : ''
               }`}
               type="button"
-              title={ttsState === 'playing' ? 'Stop audio' : 'Hear recommendation'}
+              title={ttsState === 'playing' ? t('appStopAudio') : t('appHearRec')}
               onClick={() =>
                 ttsState === 'playing'
                   ? stopAudio()
@@ -509,14 +475,14 @@ export default function CropAppPage() {
                   <span className="tts-wave" aria-hidden="true">
                     <span /><span /><span /><span />
                   </span>
-                  Stop audio
+                  {t('appStopAudio')}
                 </>
               ) : (
                 <>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                     <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
                   </svg>
-                  {ttsState === 'done' ? 'Replay audio' : 'Hear recommendation'}
+                  {ttsState === 'done' ? t('appReplayAudio') : t('appHearRec')}
                 </>
               )}
             </button>
@@ -525,10 +491,10 @@ export default function CropAppPage() {
             )}
             {/* ──────────────────────────────────────────────── */}
             <button className="btn btn-primary" type="button" onClick={copyReport}>
-              Copy report
+              {t('appCopyReport')}
             </button>
             <button className="btn btn-outline" type="button" onClick={downloadReport}>
-              Download JSON
+              {t('appDownloadJSON')}
             </button>
           </div>
         </section>
@@ -538,15 +504,15 @@ export default function CropAppPage() {
         <section className="history-panel">
           <div className="history-header">
             <div>
-              <p className="section-title">Analysis history</p>
-              <h2>Recent sessions</h2>
+              <p className="section-title">{t('appAnalysisHistory')}</p>
+              <h2>{t('appRecentSessions')}</h2>
             </div>
             <button
               className="btn btn-ghost"
               type="button"
               onClick={() => setHistory([])}
             >
-              Clear history
+              {t('appClearHistory')}
             </button>
           </div>
           <div className="history-list">
