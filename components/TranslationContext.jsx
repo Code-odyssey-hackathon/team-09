@@ -28,8 +28,8 @@ const TRANSLATIONS = {
     homeDesc:
       'Upload a leaf image, get a model confidence score, tailored recommendations, and a simple action plan for better field decisions.',
     homeLaunch: 'Launch the App',
-    homeLoginDemo: 'Login Demo',
-    homeCardLabel: 'Live demo experience',
+    homeLoginDemo: 'Login',
+    homeCardLabel: 'Live experience',
     homeCardH2: 'Photo-based plant stress analysis',
     homeCardDesc:
       'A modern Next.js interface backed by Vercel Python serverless functions. Upload, analyse, and review field diagnostics instantly.',
@@ -49,7 +49,7 @@ const TRANSLATIONS = {
     // App page
     appEyebrow: 'Crop diagnosis',
     appH1: 'Analyze photos and receive instant recommendations.',
-    appDemoLogin: 'Demo login',
+    appDemoLogin: 'Login',
     appDropTitle: 'Drop a leaf image or click to browse',
     appDropSub: 'JPEG, PNG, WebP, BMP supported',
     appAnalysing: 'Analysing…',
@@ -100,10 +100,10 @@ const TRANSLATIONS = {
     appPlaybackError: 'Playback failed.',
 
     // Auth page
-    authEyebrow: 'Demo authentication',
-    authH1: 'Secure access with a demo auth API.',
+    authEyebrow: 'Authentication',
+    authH1: 'Secure access with our auth API.',
     authDesc:
-      'This login form sends credentials to the Python serverless endpoint and returns a mock access token for the demo experience.',
+      'This login form sends credentials to the Python serverless endpoint and returns an access token.',
     authUseApp: 'Use the app',
     authLoginTitle: 'Login',
     authEmail: 'Email address',
@@ -129,8 +129,8 @@ const TRANSLATIONS = {
     homeDesc:
       'पत्ती की छवि अपलोड करें, मॉडल कॉन्फिडेंस स्कोर, अनुकूलित सिफारिशें और बेहतर खेत निर्णयों के लिए एक सरल कार्य योजना प्राप्त करें।',
     homeLaunch: 'ऐप लॉन्च करें',
-    homeLoginDemo: 'लॉगिन डेमो',
-    homeCardLabel: 'लाइव डेमो अनुभव',
+    homeLoginDemo: 'लॉगिन',
+    homeCardLabel: 'लाइव अनुभव',
     homeCardH2: 'फोटो-आधारित पौधे तनाव विश्लेषण',
     homeCardDesc:
       'Vercel Python सर्वरलेस फ़ंक्शन द्वारा समर्थित एक आधुनिक Next.js इंटरफ़ेस। तुरंत अपलोड, विश्लेषण और खेत निदान देखें।',
@@ -149,7 +149,7 @@ const TRANSLATIONS = {
 
     appEyebrow: 'फसल निदान',
     appH1: 'फोटो का विश्लेषण करें और तत्काल सिफारिशें प्राप्त करें।',
-    appDemoLogin: 'डेमो लॉगिन',
+    appDemoLogin: 'लॉगिन',
     appDropTitle: 'पत्ती की छवि यहाँ छोड़ें या ब्राउज़ करने के लिए क्लिक करें',
     appDropSub: 'JPEG, PNG, WebP, BMP समर्थित',
     appAnalysing: 'विश्लेषण हो रहा है…',
@@ -199,10 +199,10 @@ const TRANSLATIONS = {
     appTTSError: 'ऑडियो जनरेशन विफल।',
     appPlaybackError: 'प्लेबैक विफल।',
 
-    authEyebrow: 'डेमो प्रमाणीकरण',
-    authH1: 'डेमो auth API के साथ सुरक्षित पहुँच।',
+    authEyebrow: 'प्रमाणीकरण',
+    authH1: 'हमारे auth API के साथ सुरक्षित पहुँच।',
     authDesc:
-      'यह लॉगिन फ़ॉर्म Python सर्वरलेस एंडपॉइंट पर क्रेडेंशियल भेजता है और डेमो अनुभव के लिए एक मॉक एक्सेस टोकन लौटाता है।',
+      'यह लॉगिन फ़ॉर्म Python सर्वरलेस एंडपॉइंट पर क्रेडेंशियल भेजता है और एक एक्सेस टोकन लौटाता है।',
     authUseApp: 'ऐप उपयोग करें',
     authLoginTitle: 'लॉगिन',
     authEmail: 'ईमेल पता',
@@ -228,8 +228,8 @@ const TRANSLATIONS = {
     homeDesc:
       'Sube una imagen de hoja, obtén una puntuación de confianza del modelo, recomendaciones personalizadas y un plan de acción para mejores decisiones de campo.',
     homeLaunch: 'Abrir la App',
-    homeLoginDemo: 'Demo de inicio de sesión',
-    homeCardLabel: 'Experiencia de demo en vivo',
+    homeLoginDemo: 'Iniciar sesión',
+    homeCardLabel: 'Experiencia en vivo',
     homeCardH2: 'Análisis de estrés de plantas por foto',
     homeCardDesc:
       'Una interfaz moderna de Next.js respaldada por funciones serverless Python de Vercel. Sube, analiza y revisa diagnósticos de campo al instante.',
@@ -248,7 +248,7 @@ const TRANSLATIONS = {
 
     appEyebrow: 'Diagnóstico de cultivos',
     appH1: 'Analiza fotos y recibe recomendaciones instantáneas.',
-    appDemoLogin: 'Demo de inicio de sesión',
+    appDemoLogin: 'Iniciar sesión',
     appDropTitle: 'Suelta una imagen de hoja o haz clic para explorar',
     appDropSub: 'Compatible con JPEG, PNG, WebP, BMP',
     appAnalysing: 'Analizando…',
@@ -298,10 +298,10 @@ const TRANSLATIONS = {
     appTTSError: 'Error al generar audio.',
     appPlaybackError: 'Error de reproducción.',
 
-    authEyebrow: 'Autenticación de demo',
-    authH1: 'Acceso seguro con una API de autenticación de demo.',
+    authEyebrow: 'Autenticación',
+    authH1: 'Acceso seguro con nuestra API de autenticación.',
     authDesc:
-      'Este formulario de inicio de sesión envía credenciales al endpoint serverless Python y devuelve un token de acceso simulado para la experiencia de demo.',
+      'Este formulario de inicio de sesión envía credenciales al endpoint serverless Python y devuelve un token de acceso.',
     authUseApp: 'Usar la app',
     authLoginTitle: 'Iniciar sesión',
     authEmail: 'Correo electrónico',
@@ -327,8 +327,8 @@ const TRANSLATIONS = {
     homeDesc:
       'Téléversez une image de feuille, obtenez un score de confiance du modèle, des recommandations personnalisées et un plan d\'action pour de meilleures décisions agricoles.',
     homeLaunch: 'Lancer l\'App',
-    homeLoginDemo: 'Démo de connexion',
-    homeCardLabel: 'Expérience de démo en direct',
+    homeLoginDemo: 'Connexion',
+    homeCardLabel: 'Expérience en direct',
     homeCardH2: 'Analyse du stress des plantes par photo',
     homeCardDesc:
       'Une interface Next.js moderne soutenue par des fonctions serverless Python Vercel. Téléversez, analysez et examinez les diagnostics de terrain instantanément.',
@@ -347,7 +347,7 @@ const TRANSLATIONS = {
 
     appEyebrow: 'Diagnostic des cultures',
     appH1: 'Analysez des photos et recevez des recommandations instantanées.',
-    appDemoLogin: 'Démo de connexion',
+    appDemoLogin: 'Connexion',
     appDropTitle: 'Déposez une image de feuille ou cliquez pour parcourir',
     appDropSub: 'JPEG, PNG, WebP, BMP pris en charge',
     appAnalysing: 'Analyse en cours…',
@@ -397,10 +397,10 @@ const TRANSLATIONS = {
     appTTSError: 'Échec de la génération audio.',
     appPlaybackError: 'Échec de la lecture.',
 
-    authEyebrow: 'Authentification de démo',
-    authH1: 'Accès sécurisé avec une API d\'authentification de démo.',
+    authEyebrow: 'Authentification',
+    authH1: 'Accès sécurisé avec notre API d\'authentification.',
     authDesc:
-      'Ce formulaire de connexion envoie des identifiants à l\'endpoint serverless Python et renvoie un token d\'accès fictif pour l\'expérience de démo.',
+      'Ce formulaire de connexion envoie des identifiants à l\'endpoint serverless Python et renvoie un token d\'accès.',
     authUseApp: 'Utiliser l\'app',
     authLoginTitle: 'Connexion',
     authEmail: 'Adresse e-mail',
@@ -425,8 +425,8 @@ const TRANSLATIONS = {
     homeH1: 'ಎಲೆಯ ಫೋಟೋದಿಂದ ತಕ್ಷಣ ಬೆಳೆ ಒತ್ತಡ ರೋಗನಿರ್ಣಯ',
     homeDesc: 'ಎಲೆಯ ಚಿತ್ರ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ, ಮಾದರಿ ವಿಶ್ವಾಸ ಅಂಕ, ಅನುಕೂಲಿತ ಶಿಫಾರಸುಗಳು ಮತ್ತು ಉತ್ತಮ ಕ್ಷೇತ್ರ ನಿರ್ಧಾರಗಳಿಗಾಗಿ ಸರಳ ಕ್ರಿಯಾ ಯೋಜನೆ ಪಡೆಯಿರಿ.',
     homeLaunch: 'ಆ್ಯಪ್ ತೆರೆಯಿರಿ',
-    homeLoginDemo: 'ಲಾಗಿನ್ ಡೆಮೋ',
-    homeCardLabel: 'ನೇರ ಡೆಮೋ ಅನುಭವ',
+    homeLoginDemo: 'ಲಾಗಿನ್',
+    homeCardLabel: 'ನೇರ ಅನುಭವ',
     homeCardH2: 'ಫೋಟೋ ಆಧಾರಿತ ಸಸ್ಯ ಒತ್ತಡ ವಿಶ್ಲೇಷಣೆ',
     homeCardDesc: 'Vercel Python ಸರ್ವರ್‌ಲೆಸ್ ಕಾರ್ಯಗಳಿಂದ ಬೆಂಬಲಿತ ಆಧುನಿಕ Next.js ಇಂಟರ್ಫೇಸ್. ತಕ್ಷಣ ಅಪ್‌ಲೋಡ್, ವಿಶ್ಲೇಷಿಸಿ ಮತ್ತು ಕ್ಷೇತ್ರ ರೋಗನಿರ್ಣಯ ಪರಿಶೀಲಿಸಿ.',
     homePillML: 'ನೇರ ML API',
@@ -441,7 +441,7 @@ const TRANSLATIONS = {
 
     appEyebrow: 'ಬೆಳೆ ರೋಗನಿರ್ಣಯ',
     appH1: 'ಫೋಟೋಗಳನ್ನು ವಿಶ್ಲೇಷಿಸಿ ಮತ್ತು ತಕ್ಷಣ ಶಿಫಾರಸುಗಳನ್ನು ಪಡೆಯಿರಿ.',
-    appDemoLogin: 'ಡೆಮೋ ಲಾಗಿನ್',
+    appDemoLogin: 'ಲಾಗಿನ್',
     appDropTitle: 'ಎಲೆಯ ಚಿತ್ರ ಇಲ್ಲಿ ಬಿಡಿ ಅಥವಾ ಬ್ರೌಸ್ ಮಾಡಲು ಕ್ಲಿಕ್ ಮಾಡಿ',
     appDropSub: 'JPEG, PNG, WebP, BMP ಬೆಂಬಲಿತ',
     appAnalysing: 'ವಿಶ್ಲೇಷಿಸಲಾಗುತ್ತಿದೆ…',
@@ -491,9 +491,9 @@ const TRANSLATIONS = {
     appTTSError: 'ಆಡಿಯೊ ರಚನೆ ವಿಫಲವಾಗಿದೆ.',
     appPlaybackError: 'ಪ್ಲೇಬ್ಯಾಕ್ ವಿಫಲವಾಗಿದೆ.',
 
-    authEyebrow: 'ಡೆಮೋ ದೃಢೀಕರಣ',
-    authH1: 'ಡೆಮೋ auth API ಮೂಲಕ ಸುರಕ್ಷಿತ ಪ್ರವೇಶ.',
-    authDesc: 'ಈ ಲಾಗಿನ್ ಫಾರ್ಮ್ Python ಸರ್ವರ್‌ಲೆಸ್ ಎಂಡ್‌ಪಾಯಿಂಟ್‌ಗೆ ರುಜುವಾತುಗಳನ್ನು ಕಳುಹಿಸುತ್ತದೆ ಮತ್ತು ಡೆಮೋ ಅನುಭವಕ್ಕಾಗಿ ನಕಲಿ ಟೋಕನ್ ನೀಡುತ್ತದೆ.',
+    authEyebrow: 'ದೃಢೀಕರಣ',
+    authH1: 'ನಮ್ಮ auth API ಮೂಲಕ ಸುರಕ್ಷಿತ ಪ್ರವೇಶ.',
+    authDesc: 'ಈ ಲಾಗಿನ್ ಫಾರ್ಮ್ Python ಸರ್ವರ್‌ಲೆಸ್ ಎಂಡ್‌ಪಾಯಿಂಟ್‌ಗೆ ರುಜುವಾತುಗಳನ್ನು ಕಳುಹಿಸುತ್ತದೆ ಮತ್ತು ಆ್ಯಕ್ಸೆಸ್ ಟೋಕನ್ ನೀಡುತ್ತದೆ.',
     authUseApp: 'ಆ್ಯಪ್ ಬಳಸಿ',
     authLoginTitle: 'ಲಾಗಿನ್',
     authEmail: 'ಇಮೇಲ್ ವಿಳಾಸ',
@@ -518,8 +518,8 @@ const TRANSLATIONS = {
     homeH1: 'இலை புகைப்படத்தில் உடனடி பயிர் அழுத்த நோய் கண்டறிதல்',
     homeDesc: 'இலை படத்தை பதிவேற்றவும், மாதிரி நம்பிக்கை மதிப்பெண், தனிப்பயன் பரிந்துரைகள் மற்றும் சிறந்த வயல் முடிவுகளுக்கான எளிய செயல் திட்டம் பெறவும்.',
     homeLaunch: 'ஆப்பை திறக்கவும்',
-    homeLoginDemo: 'உள்நுழைவு டெமோ',
-    homeCardLabel: 'நேரடி டெமோ அனுபவம்',
+    homeLoginDemo: 'உள்நுழைவு',
+    homeCardLabel: 'நேரடி அனுபவம்',
     homeCardH2: 'புகைப்பட அடிப்படையிலான தாவர அழுத்த பகுப்பாய்வு',
     homeCardDesc: 'Vercel Python சர்வர்லெஸ் செயல்பாடுகளால் ஆதரிக்கப்படும் நவீன Next.js இடைமுகம். உடனடியாக பதிவேற்றவும், பகுப்பாய்வு செய்யவும்.',
     homePillML: 'நேரடி ML API',
@@ -534,7 +534,7 @@ const TRANSLATIONS = {
 
     appEyebrow: 'பயிர் நோய் கண்டறிதல்',
     appH1: 'புகைப்படங்களை பகுப்பாய்வு செய்து உடனடி பரிந்துரைகள் பெறவும்.',
-    appDemoLogin: 'டெமோ உள்நுழைவு',
+    appDemoLogin: 'உள்நுழைவு',
     appDropTitle: 'இலை படத்தை இங்கே விடவும் அல்லது உலாவ கிளிக் செய்யவும்',
     appDropSub: 'JPEG, PNG, WebP, BMP ஆதரிக்கப்படுகிறது',
     appAnalysing: 'பகுப்பாய்வு செய்கிறது…',
@@ -584,9 +584,9 @@ const TRANSLATIONS = {
     appTTSError: 'ஆடியோ உருவாக்கம் தோல்வியடைந்தது.',
     appPlaybackError: 'இயக்கம் தோல்வியடைந்தது.',
 
-    authEyebrow: 'டெமோ அங்கீகாரம்',
-    authH1: 'டெமோ auth API மூலம் பாதுகாப்பான அணுகல்.',
-    authDesc: 'இந்த உள்நுழைவு படிவம் Python சர்வர்லெஸ் இறுதிப்புள்ளிக்கு சான்றுகளை அனுப்பி டெமோ அனுபவத்திற்கான போலி டோக்கனை வழங்குகிறது.',
+    authEyebrow: 'அங்கீகாரம்',
+    authH1: 'நமது auth API மூலம் பாதுகாப்பான அணுகல்.',
+    authDesc: 'இந்த உள்நுழைவு படிவம் Python சர்வர்லெஸ் இறுதிப்புள்ளிக்கு சான்றுகளை அனுப்பி அணுகல் டோக்கனை வழங்குகிறது.',
     authUseApp: 'ஆப்பை பயன்படுத்தவும்',
     authLoginTitle: 'உள்நுழைவு',
     authEmail: 'மின்னஞ்சல் முகவரி',
@@ -611,8 +611,8 @@ const TRANSLATIONS = {
     homeH1: 'ఆకు ఫోటోతో తక్షణ పంట ఒత్తిడి నిర్ధారణ',
     homeDesc: 'ఆకు చిత్రాన్ని అప్‌లోడ్ చేయండి, మోడల్ విశ్వాస స్కోర్, అనుకూల సిఫార్సులు మరియు మెరుగైన పొల నిర్ణయాల కోసం సరళ చర్య ప్రణాళిక పొందండి.',
     homeLaunch: 'యాప్ తెరవండి',
-    homeLoginDemo: 'లాగిన్ డెమో',
-    homeCardLabel: 'లైవ్ డెమో అనుభవం',
+    homeLoginDemo: 'లాగిన్',
+    homeCardLabel: 'లైవ్ అనుభవం',
     homeCardH2: 'ఫోటో ఆధారిత మొక్క ఒత్తిడి విశ్లేషణ',
     homeCardDesc: 'Vercel Python సర్వర్‌లెస్ ఫంక్షన్‌ల ద్వారా మద్దతు ఇచ్చే ఆధునిక Next.js ఇంటర్‌ఫేస్. తక్షణమే అప్‌లోడ్, విశ్లేషించండి మరియు పొల నిర్ధారణలు సమీక్షించండి.',
     homePillML: 'లైవ్ ML API',
@@ -627,7 +627,7 @@ const TRANSLATIONS = {
 
     appEyebrow: 'పంట నిర్ధారణ',
     appH1: 'ఫోటోలను విశ్లేషించి తక్షణ సిఫార్సులు పొందండి.',
-    appDemoLogin: 'డెమో లాగిన్',
+    appDemoLogin: 'లాగిన్',
     appDropTitle: 'ఆకు చిత్రాన్ని ఇక్కడ వదలండి లేదా బ్రౌజ్ చేయడానికి క్లిక్ చేయండి',
     appDropSub: 'JPEG, PNG, WebP, BMP మద్దతు ఉంది',
     appAnalysing: 'విశ్లేషిస్తోంది…',
@@ -677,9 +677,9 @@ const TRANSLATIONS = {
     appTTSError: 'ఆడియో రూపొందించడం విఫలమైంది.',
     appPlaybackError: 'ప్లేబ్యాక్ విఫలమైంది.',
 
-    authEyebrow: 'డెమో ప్రమాణీకరణ',
-    authH1: 'డెమో auth API తో సురక్షిత యాక్సెస్.',
-    authDesc: 'ఈ లాగిన్ ఫారమ్ Python సర్వర్‌లెస్ ఎండ్‌పాయింట్‌కు ఆధారాలు పంపి డెమో అనుభవం కోసం నకిలీ టోకెన్ అందిస్తుంది.',
+    authEyebrow: 'ప్రమాణీకరణ',
+    authH1: 'మా auth API తో సురక్షిత యాక్సెస్.',
+    authDesc: 'ఈ లాగిన్ ఫారమ్ Python సర్వర్‌లెస్ ఎండ్‌పాయింట్‌కు ఆధారాలు పంపి యాక్సెస్ టోకెన్ అందిస్తుంది.',
     authUseApp: 'యాప్ వాడండి',
     authLoginTitle: 'లాగిన్',
     authEmail: 'ఇమెయిల్ చిరునామా',

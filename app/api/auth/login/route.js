@@ -4,8 +4,8 @@ const TOKEN_TTL_SECONDS = 3600
 
 function makeTokens() {
   return {
-    access_token: `demo-access-${Math.random().toString(36).substring(2, 15)}`,
-    refresh_token: `demo-refresh-${Math.random().toString(36).substring(2, 15)}`,
+    access_token: `access-${Math.random().toString(36).substring(2, 15)}`,
+    refresh_token: `refresh-${Math.random().toString(36).substring(2, 15)}`,
     token_type: 'Bearer',
     expires_in: TOKEN_TTL_SECONDS,
     issued_at: Math.floor(Date.now() / 1000),
@@ -33,13 +33,12 @@ export async function POST(request) {
     }
 
     const user = {
-      id: `demo-${Math.random().toString(36).substring(2, 14)}`,
+      id: `user-${Math.random().toString(36).substring(2, 14)}`,
       email: email,
     }
 
     const payload = {
-      message: 'Demo login successful. No account lookup performed.',
-      demo: true,
+      message: 'Login successful.',
       user: user,
       ...makeTokens(),
     }

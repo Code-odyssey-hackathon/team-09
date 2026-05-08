@@ -135,7 +135,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
       <span>CropWhisperer</span>
     </a>
     <div class="top-actions">
-      <a class="ghost-link" href="/app">Try the demo</a>
+      <a class="ghost-link" href="/app">Launch App</a>
     </div>
   </header>
 
@@ -177,7 +177,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
         </div>
 
         <div class="note-box">
-          No account is required to try the demo. Create one to unlock saved reports and team access.
+          Create an account to unlock saved reports and team access.
         </div>
       </div>
     </section>
@@ -327,7 +327,7 @@ async function submitAuth(endpoint, payload, button, message) {
       throw new Error(data.error || 'Request failed.');
     }
 
-    localStorage.setItem('cw_demo_auth', JSON.stringify(data));
+    localStorage.setItem('cw_auth', JSON.stringify(data));
     showAlert('success', data.message || 'Success. Redirecting...');
     window.location.href = '/app';
   } catch (err) {
