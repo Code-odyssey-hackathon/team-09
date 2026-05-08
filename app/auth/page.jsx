@@ -2,8 +2,10 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
 export default function AuthPage() {
+  const router = useRouter()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [status, setStatus] = useState(null)
@@ -26,6 +28,10 @@ export default function AuthPage() {
         setStatus({ type: 'error', message: data.error || 'Login failed.' })
       } else {
         setStatus({ type: 'success', message: data.message, details: data })
+        // Redirect to app after successful login
+        setTimeout(() => {
+          router.push('/app')
+        }, 1500) // Small delay to show success message
       }
     } catch (err) {
       setStatus({ type: 'error', message: 'Unable to reach the login API.' })
