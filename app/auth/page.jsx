@@ -29,6 +29,8 @@ export default function AuthPage() {
       if (!response.ok) {
         setStatus({ type: 'error', message: data.error || t('authLoginFailed') })
       } else {
+        // Store user ID in localStorage for subscription management
+        localStorage.setItem('userId', data.user.id)
         router.push('/app')
       }
     } catch (err) {

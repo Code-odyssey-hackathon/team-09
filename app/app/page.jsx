@@ -174,6 +174,10 @@ export default function CropAppPage() {
       const formData = new FormData()
       formData.append('file', file)
 
+      // Include user ID for subscription checking
+      const userId = localStorage.getItem('userId') || 'anonymous'
+      formData.append('userId', userId)
+
       const response = await fetch('/api/predict', {
         method: 'POST',
         body: formData,

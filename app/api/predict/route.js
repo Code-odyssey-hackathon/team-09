@@ -20,6 +20,7 @@ export async function POST(request) {
   try {
     const formData = await request.formData()
     const file = formData.get('file')
+    const userId = formData.get('userId') || 'anonymous'
 
     if (!file) {
       return NextResponse.json(
@@ -43,6 +44,69 @@ export async function POST(request) {
         { error: 'File too large. Maximum size is 10MB.' },
         { status: 400 }
       )
+    }
+
+    // Check subscription limits for authenticated users
+    if (userId !== 'anonymous') {
+      try {
+        // Get user's subscription
+        const subscriptionResponse = await fetch(`${request.nextUrl.origin}/api/subscriptions?userId=${userId}`)
+        const subscriptionData = await subscriptionResponse.json()
+
+        if (subscriptionData.subscription) {
+          const plan = subscriptionData.subscription.plan
+
+          // Get current usage
+          const usageResponse = await fetch(`${request.nextUrl.origin}/api/usage?userId=${userId}`)
+          const usageData = await usageResponse.json()
+
+          // Check if user has exceeded their limit
+          if (plan.limits.analysesPerMonth !== -1 && usageData.usage.analysesCount >= plan.limits.analysesPerMonth) {
+            return NextResponse.json(
+              {
+                error: 'Monthly analysis limit exceeded. Please upgrade your plan or wait for the next billing cycle.',
+                limit: plan.limits.analysesPerMonth,
+                used: usageData.usage.analysesCount,
+                planName: plan.name
+              },
+              { status: 429 }
+            )
+          }
+        } else {
+          // Free plan check
+          const usageResponse = await fetch(`${request.nextUrl.origin}/api/usage?userId=${userId}`)
+          const usageData = await usageResponse.json()
+
+          if (usageData.usage.analysesCount >= 5) { // Free plan limit
+            return NextResponse.json(
+              {
+                error: 'Free plan limit exceeded. Please upgrade to continue using the service.',
+                limit: 5,
+                used: usageData.usage.analysesCount,
+                planName: 'Free Plan'
+              },
+              { status: 429 }
+            )
+          }
+        }
+      } catch (error) {
+        console.error('Subscription check error:', error)
+        // Continue with analysis if subscription check fails
+      }
+    }
+
+    // Record usage for authenticated users
+    if (userId !== 'anonymous') {
+      try {
+        await fetch(`${request.nextUrl.origin}/api/usage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId })
+        })
+      } catch (error) {
+        console.error('Usage recording error:', error)
+        // Continue with analysis if usage recording fails
+      }
     }
 
     // Mock prediction - randomly select a stress type

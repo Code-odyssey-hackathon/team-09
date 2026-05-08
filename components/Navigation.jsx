@@ -44,6 +44,18 @@ export default function Navigation() {
             {t('navApp')}
           </Link>
           <Link
+            href="/pricing"
+            className={`navbar-link ${pathname === '/pricing' ? 'active' : ''}`}
+          >
+            Pricing
+          </Link>
+          <Link
+            href="/subscription"
+            className={`navbar-link ${pathname === '/subscription' ? 'active' : ''}`}
+          >
+            Subscription
+          </Link>
+          <Link
             href="/auth"
             className={`navbar-link ${pathname === '/auth' ? 'active' : ''}`}
           >
