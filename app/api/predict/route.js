@@ -57,7 +57,7 @@ export async function POST(request) {
       severity: severity,
       recommendation: RECOMMENDATIONS[stressType],
       climate_alert: 'No extreme weather conditions detected in your area.',
-      model_version: 'demo-v1.0',
+      model_version: 'v1.0',
       processing_time_ms: Math.floor(Math.random() * 500) + 200,
     }
 
