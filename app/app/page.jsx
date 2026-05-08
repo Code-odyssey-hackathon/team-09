@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 const STRESS_CATEGORIES = [
   'Healthy',
@@ -73,6 +73,7 @@ function computeQuality(file, width, height) {
 
 export default function CropAppPage() {
   const inputRef = useRef(null)
+  const audioRef = useRef(null)           // holds the currently-playing Audio object
   const [profile, setProfile] = useState(DEFAULT_PROFILE)
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState('')
@@ -82,6 +83,9 @@ export default function CropAppPage() {
   const [history, setHistory] = useState([])
   const [meta, setMeta] = useState({ resolution: '-', size: '-', aspect: '-', score: 0 })
   const [dragOver, setDragOver] = useState(false)
+  // ttsState: 'idle' | 'loading' | 'playing' | 'done' | 'error'
+  const [ttsState, setTtsState] = useState('idle')
+  const [ttsError, setTtsError] = useState('')
 
   useEffect(() => {
     if (typeof window === 'undefined') return
@@ -221,6 +225,67 @@ export default function CropAppPage() {
       setLoading(false)
     }
   }
+
+  // ── TTS ──────────────────────────────────────────────────────────────────
+  const speakRecommendation = useCallback(async (text) => {
+    if (!text) return
+    // Stop any audio already playing
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+    }
+    setTtsState('loading')
+    setTtsError('')
+    try {
+      const res = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      })
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}))
+        throw new Error(errData.error || `TTS failed (${res.status})`)
+      }
+      const blob = await res.blob()
+      const url  = URL.createObjectURL(blob)
+      const audio = new Audio(url)
+      audioRef.current = audio
+      audio.onplay  = () => setTtsState('playing')
+      audio.onended = () => { setTtsState('done'); URL.revokeObjectURL(url) }
+      audio.onerror = () => { setTtsState('error'); setTtsError('Playback failed.'); URL.revokeObjectURL(url) }
+      audio.play()
+    } catch (err) {
+      setTtsState('error')
+      setTtsError(err instanceof Error ? err.message : 'Audio generation failed.')
+    }
+  }, [])
+
+  const stopAudio = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current = null
+      setTtsState('idle')
+    }
+  }, [])
+
+  // Auto-play TTS whenever a new report arrives
+  useEffect(() => {
+    if (!report) return
+    const fullText = [
+      `Analysis complete. Detected ${report.stress_type}.`,
+      `Confidence: ${Math.round((report.confidence || 0) * 100)} percent.`,
+      `Recommendation: ${report.recommendation}`,
+      report.climate_alert && report.climate_alert !== 'No extreme weather conditions detected in your area.'
+        ? `Climate alert: ${report.climate_alert}`
+        : '',
+    ].filter(Boolean).join(' ')
+    speakRecommendation(fullText)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [report])
+
+  // Clean up on unmount
+  useEffect(() => () => { if (audioRef.current) audioRef.current.pause() }, [])
+  // ─────────────────────────────────────────────────────────────────────────
 
   const downloadReport = () => {
     if (!report) return
@@ -414,6 +479,51 @@ export default function CropAppPage() {
             </div>
           </div>
           <div className="action-row">
+            {/* ── TTS speaker button ─────────────────────────── */}
+            <button
+              id="tts-speak-btn"
+              className={`btn btn-tts ${
+                ttsState === 'loading' ? 'btn-tts--loading' :
+                ttsState === 'playing' ? 'btn-tts--playing' : ''
+              }`}
+              type="button"
+              title={ttsState === 'playing' ? 'Stop audio' : 'Hear recommendation'}
+              onClick={() =>
+                ttsState === 'playing'
+                  ? stopAudio()
+                  : speakRecommendation([
+                      `Analysis complete. Detected ${report.stress_type}.`,
+                      `Confidence: ${Math.round((report.confidence || 0) * 100)} percent.`,
+                      `Recommendation: ${report.recommendation}`,
+                      report.climate_alert && report.climate_alert !== 'No extreme weather conditions detected in your area.'
+                        ? `Climate alert: ${report.climate_alert}` : '',
+                    ].filter(Boolean).join(' '))
+              }
+              disabled={ttsState === 'loading'}
+            >
+              {ttsState === 'loading' && (
+                <span className="tts-spin" aria-hidden="true" />
+              )}
+              {ttsState === 'playing' ? (
+                <>
+                  <span className="tts-wave" aria-hidden="true">
+                    <span /><span /><span /><span />
+                  </span>
+                  Stop audio
+                </>
+              ) : (
+                <>
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                  </svg>
+                  {ttsState === 'done' ? 'Replay audio' : 'Hear recommendation'}
+                </>
+              )}
+            </button>
+            {ttsError && (
+              <span className="tts-error" role="alert">{ttsError}</span>
+            )}
+            {/* ──────────────────────────────────────────────── */}
             <button className="btn btn-primary" type="button" onClick={copyReport}>
               Copy report
             </button>

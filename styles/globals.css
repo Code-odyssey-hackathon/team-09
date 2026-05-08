@@ -764,3 +764,92 @@ select {
   margin: 0 auto;
   padding: 5rem 0 5rem; /* Increased top padding for navbar */
 }
+
+/* ── TTS / ElevenLabs speaker button ──────────────────────────────────────── */
+.btn-tts {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.9rem 1.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(56, 189, 248, 0.08);
+  color: var(--blue);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-tts:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.16);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 28px rgba(56, 189, 248, 0.22);
+}
+
+.btn-tts:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Loading state */
+.btn-tts--loading {
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+/* Playing state */
+.btn-tts--playing {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: var(--blue);
+  color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+/* Spinner (loading) */
+.tts-spin {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(56, 189, 248, 0.25);
+  border-top-color: var(--blue);
+  border-radius: 50%;
+  animation: tts-rotate 0.7s linear infinite;
+}
+
+@keyframes tts-rotate {
+  to { transform: rotate(360deg); }
+}
+
+/* Sound-wave bars (playing) */
+.tts-wave {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 18px;
+}
+
+.tts-wave span {
+  display: block;
+  width: 3px;
+  background: var(--blue);
+  border-radius: 2px;
+  animation: tts-bar 0.9s ease-in-out infinite;
+}
+
+.tts-wave span:nth-child(1) { height: 6px;  animation-delay: 0s; }
+.tts-wave span:nth-child(2) { height: 14px; animation-delay: 0.15s; }
+.tts-wave span:nth-child(3) { height: 10px; animation-delay: 0.3s; }
+.tts-wave span:nth-child(4) { height: 18px; animation-delay: 0.45s; }
+
+@keyframes tts-bar {
+  0%, 100% { transform: scaleY(0.4); }
+  50%       { transform: scaleY(1.0); }
+}
+
+/* Inline error text */
+.tts-error {
+  font-size: 0.82rem;
+  color: #fda4af;
+  align-self: center;
+}
+/* ─────────────────────────────────────────────────────────────────────────── */
+
