@@ -1,5 +1,5 @@
 {
-  "outputDirectory": "public",
+  "framework": "nextjs",
   "functions": {
     "api/**/*.py": {
       "maxDuration": 30,
@@ -10,30 +10,6 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/$1"
-    },
-    {
-      "src": "/app",
-      "dest": "/app.html"
-    },
-    {
-      "src": "/auth",
-      "dest": "/auth.html"
-    },
-    {
-      "src": "/login",
-      "dest": "/auth.html"
-    },
-    {
-      "src": "/signup",
-      "dest": "/auth.html"
-    },
-    {
-      "src": "/hero-leaf.png",
-      "dest": "/hero-leaf.png"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
     }
   ],
   "headers": [
