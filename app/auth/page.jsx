@@ -27,11 +27,8 @@ export default function AuthPage() {
       if (!response.ok) {
         setStatus({ type: 'error', message: data.error || 'Login failed.' })
       } else {
-        setStatus({ type: 'success', message: data.message, details: data })
-        // Redirect to app after successful login
-        setTimeout(() => {
-          router.push('/app')
-        }, 1500) // Small delay to show success message
+        // Redirect immediately after successful login
+        router.push('/app')
       }
     } catch (err) {
       setStatus({ type: 'error', message: 'Unable to reach the login API.' })
@@ -88,11 +85,6 @@ export default function AuthPage() {
           {status && (
             <div className={`alert ${status.type === 'error' ? 'alert-error' : 'alert-success'}`}>
               <p>{status.message}</p>
-              {status.type === 'success' && status.details && (
-                <div className="token-box">
-                  <pre>{status.details.access_token}</pre>
-                </div>
-              )}
             </div>
           )}
         </div>
