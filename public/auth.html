@@ -106,6 +106,12 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 
 .note-box{background:rgba(6,10,12,.7);border:1px solid var(--stroke);border-radius:var(--radius-md);padding:1rem;color:var(--muted);font-size:.82rem;line-height:1.6}
 
+.alert{display:none;gap:.65rem;align-items:flex-start;border-radius:var(--radius-md);padding:.85rem 1rem;font-size:.85rem;line-height:1.5}
+.alert.show{display:flex}
+.alert.success{background:rgba(61,220,132,.12);border:1px solid rgba(61,220,132,.4);color:#b8f7cf}
+.alert.error{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.4);color:#fecaca}
+.alert.info{background:rgba(122,229,255,.12);border:1px solid rgba(122,229,255,.35);color:#b6e9ff}
+
 .reveal{opacity:0;transform:translateY(14px);animation:rise .8s ease forwards;animation-delay:var(--d,0s)}
 @keyframes rise{to{opacity:1;transform:translateY(0)}}
 
@@ -182,6 +188,8 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
         <button class="tab-btn" data-view="signup" role="tab" aria-selected="false">Create account</button>
       </div>
 
+      <div class="alert" id="form-alert" role="status" aria-live="polite"></div>
+
       <form class="form-block active" id="login-view" aria-label="Sign in form">
         <div class="field">
           <label for="login-email">Email address</label>
@@ -194,20 +202,7 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
             <button class="toggle-btn" type="button" data-toggle="login-password">Show</button>
           </div>
         </div>
-        <div class="switch-links">
-          <label class="checkbox-row">
-            <input type="checkbox"/>
-            Remember this device
-          </label>
-          <a href="#">Forgot password?</a>
-        </div>
         <button class="btn-primary" type="submit">Sign in</button>
-
-        <div class="divider">or continue with</div>
-        <div class="social-grid">
-          <button class="social-btn" type="button">Continue with Google</button>
-          <button class="social-btn" type="button">Continue with Apple</button>
-        </div>
 
         <div class="switch-links">
           <span>New to CropWhisperer?</span>
@@ -217,22 +212,8 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
 
       <form class="form-block" id="signup-view" aria-label="Create account form">
         <div class="field">
-          <label for="signup-name">Full name</label>
-          <input id="signup-name" type="text" placeholder="Full name" required/>
-        </div>
-        <div class="field">
           <label for="signup-email">Email address</label>
           <input id="signup-email" type="email" placeholder="you@farmmail.com" required/>
-        </div>
-        <div class="field">
-          <label for="signup-role">Primary role</label>
-          <select id="signup-role" required>
-            <option value="" disabled selected>Select a role</option>
-            <option value="farmer">Farmer</option>
-            <option value="agronomist">Agronomist</option>
-            <option value="cooperative">Cooperative manager</option>
-            <option value="research">Researcher</option>
-          </select>
         </div>
         <div class="field">
           <label for="signup-password">Create password</label>
@@ -240,26 +221,8 @@ input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 
             <input id="signup-password" type="password" placeholder="Create a password" required/>
             <button class="toggle-btn" type="button" data-toggle="signup-password">Show</button>
           </div>
-          <span class="helper">Use at least 8 characters, one number, and one symbol.</span>
         </div>
-        <div class="field">
-          <label for="signup-confirm">Confirm password</label>
-          <div class="input-row">
-            <input id="signup-confirm" type="password" placeholder="Repeat your password" required/>
-            <button class="toggle-btn" type="button" data-toggle="signup-confirm">Show</button>
-          </div>
-        </div>
-        <label class="checkbox-row">
-          <input type="checkbox" required/>
-          I agree to the Terms and Privacy Policy
-        </label>
         <button class="btn-primary" type="submit">Create account</button>
-
-        <div class="divider">or start with</div>
-        <div class="social-grid">
-          <button class="social-btn" type="button">Sign up with Google</button>
-          <button class="social-btn" type="button">Sign up with Apple</button>
-        </div>
 
         <div class="switch-links">
           <span>Already have an account?</span>
@@ -276,6 +239,30 @@ const views = {
   login: document.getElementById('login-view'),
   signup: document.getElementById('signup-view')
 };
+const alertBox = document.getElementById('form-alert');
+
+function clearAlert() {
+  alertBox.classList.remove('show','success','error','info');
+  alertBox.textContent = '';
+}
+
+function showAlert(type, message) {
+  alertBox.classList.remove('success','error','info');
+  alertBox.classList.add('show', type);
+  alertBox.textContent = message;
+}
+
+function setLoading(button, isLoading, label) {
+  if (!button) return;
+  if (isLoading) {
+    button.dataset.label = button.textContent;
+    button.textContent = label || 'Working...';
+    button.disabled = true;
+    return;
+  }
+  button.textContent = button.dataset.label || button.textContent;
+  button.disabled = false;
+}
 
 function setView(view) {
   Object.keys(views).forEach(key => {
@@ -286,6 +273,7 @@ function setView(view) {
     btn.classList.toggle('is-active', active);
     btn.setAttribute('aria-selected', active ? 'true' : 'false');
   });
+  clearAlert();
 }
 
 function getViewFromHash() {
@@ -321,6 +309,49 @@ document.querySelectorAll('[data-toggle]').forEach(btn => {
     input.type = isHidden ? 'text' : 'password';
     btn.textContent = isHidden ? 'Hide' : 'Show';
   });
+});
+
+async function submitAuth(endpoint, payload, button, message) {
+  setLoading(button, true, message);
+  showAlert('info', message);
+
+  try {
+    const resp = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) {
+      throw new Error(data.error || 'Request failed.');
+    }
+
+    localStorage.setItem('cw_demo_auth', JSON.stringify(data));
+    showAlert('success', data.message || 'Success. You are signed in.');
+  } catch (err) {
+    showAlert('error', err.message || 'Something went wrong.');
+  } finally {
+    setLoading(button, false);
+  }
+}
+
+document.getElementById('login-view').addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const button = e.currentTarget.querySelector('button[type="submit"]');
+
+  submitAuth('/api/auth/login', { email, password }, button, 'Signing in...');
+});
+
+document.getElementById('signup-view').addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  const button = e.currentTarget.querySelector('button[type="submit"]');
+
+  submitAuth('/api/auth/signup', { email, password }, button, 'Creating account...');
 });
 </script>
 </body>
