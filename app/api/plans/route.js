@@ -6,7 +6,7 @@ const BUSINESS_PLANS = [
     id: 'free',
     name: 'Free Plan',
     price: 0,
-    currency: 'USD',
+    currency: 'INR',
     interval: 'month',
     features: [
       '5 image analyses per month',
@@ -23,8 +23,8 @@ const BUSINESS_PLANS = [
   {
     id: 'starter',
     name: 'Starter Plan',
-    price: 9.99,
-    currency: 'USD',
+    price: 499,
+    currency: 'INR',
     interval: 'month',
     features: [
       '50 image analyses per month',
@@ -44,8 +44,8 @@ const BUSINESS_PLANS = [
   {
     id: 'professional',
     name: 'Professional Plan',
-    price: 29.99,
-    currency: 'USD',
+    price: 1499,
+    currency: 'INR',
     interval: 'month',
     features: [
       'Unlimited image analyses',
@@ -66,8 +66,8 @@ const BUSINESS_PLANS = [
   {
     id: 'enterprise',
     name: 'Enterprise Plan',
-    price: 99.99,
-    currency: 'USD',
+    price: 4999,
+    currency: 'INR',
     interval: 'month',
     features: [
       'Everything in Professional',

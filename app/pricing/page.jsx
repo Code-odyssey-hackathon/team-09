@@ -121,7 +121,7 @@ export default function PricingPage() {
               className={`btn ${plan.popular ? 'btn-primary' : 'btn-outline'}`}
               onClick={() => handleSubscribe(plan.id)}
             >
-              {plan.price === 0 ? 'Get Started Free' : `Subscribe for $${plan.price}`}
+              {plan.price === 0 ? 'Get Started Free' : `Subscribe for ₹${plan.price}`}
             </button>
           </div>
         ))}
