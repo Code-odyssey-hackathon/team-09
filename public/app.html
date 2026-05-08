@@ -6,43 +6,81 @@
 <title>AI Crop Stress Whisperer</title>
 <meta name="description" content="AI-powered crop stress detection. Upload a leaf photo to diagnose drought, nutrient deficiency, pest attacks, and fungal disease."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#060d0a;--surface:#0e1c14;--card:#152019;--border:#1f3328;
-  --green:#22c55e;--green-dim:#15803d;--amber:#f59e0b;--red:#ef4444;
-  --blue:#38bdf8;--text:#e2ffe8;--muted:#6b8f76;--white:#f0fdf4;
-  --radius:16px;--ring:220px;
+  --bg:#f6f2e7;--surface:#e6f0e3;--card:#fffdf7;--border:#cbd8c7;
+  --green:#1f8f4e;--green-dim:#166d3a;--amber:#d97706;--red:#dc2626;
+  --blue:#2563eb;--text:#0f2d1f;--text-soft:#2f4c3b;--muted:#5b6f5f;--white:#ffffff;
+  --radius:16px;--ring:220px;--shadow:0 18px 40px rgba(15,45,31,0.12);
+  --content-width:880px;
 }
 html{scroll-behavior:smooth}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:2rem 1rem}
+body{font-family:'Sora',sans-serif;background:
+  radial-gradient(800px 500px at 10% -10%, rgba(83,195,124,0.38), transparent 60%),
+  radial-gradient(600px 420px at 100% 5%, rgba(251,191,36,0.35), transparent 62%),
+  var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  padding:2rem 1rem 3rem;position:relative;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;
+  background:repeating-linear-gradient(120deg, rgba(15,45,31,0.06) 0, rgba(15,45,31,0.06) 1px, transparent 1px, transparent 14px);
+  opacity:.25;pointer-events:none;z-index:-1}
 
 /* ── Header ── */
-header{text-align:center;margin-bottom:2.5rem}
+header{text-align:center;margin-bottom:2.2rem;max-width:var(--content-width)}
 .logo{display:inline-flex;align-items:center;gap:.6rem;margin-bottom:1rem}
-.logo-icon{font-size:2.2rem;filter:drop-shadow(0 0 12px #22c55e88)}
-h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);background:linear-gradient(135deg,#22c55e,#a3e635);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo-icon{font-size:2.2rem;filter:drop-shadow(0 8px 18px rgba(31,143,78,0.25))}
+h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);background:linear-gradient(135deg,#1f8f4e,#84cc16);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .tagline{color:var(--muted);font-size:.95rem;margin-top:.4rem}
 
 /* ── Upload card ── */
-.upload-card{background:var(--card);border:2px dashed var(--border);border-radius:var(--radius);width:100%;max-width:580px;padding:2.5rem;text-align:center;cursor:pointer;transition:border-color .25s,background .25s;position:relative}
-.upload-card:hover,.upload-card.drag-over{border-color:var(--green);background:#0d1f12}
+.upload-card{background:var(--card);border:2px dashed var(--border);border-radius:var(--radius);width:100%;max-width:700px;padding:2.4rem;text-align:center;cursor:pointer;transition:border-color .25s,background .25s,box-shadow .25s;position:relative;box-shadow:var(--shadow)}
+.upload-card:hover,.upload-card.drag-over{border-color:var(--green);background:#f3fbf4}
 .upload-icon{font-size:3rem;margin-bottom:1rem;opacity:.7}
 .upload-card h2{font-size:1.1rem;font-weight:600;margin-bottom:.4rem}
 .upload-card p{color:var(--muted);font-size:.88rem}
 #file-input{display:none}
 
-.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.4rem;border-radius:8px;border:none;cursor:pointer;font-size:.9rem;font-weight:600;font-family:'Inter',sans-serif;transition:all .2s}
-.btn-primary{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;box-shadow:0 4px 20px #22c55e44}
-.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 28px #22c55e66}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.4rem;border-radius:10px;border:none;cursor:pointer;font-size:.9rem;font-weight:600;font-family:'Sora',sans-serif;transition:all .2s}
+.btn-primary{background:linear-gradient(135deg,#1f8f4e,#4dbb7a);color:#fff;box-shadow:0 8px 24px rgba(31,143,78,0.25)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(31,143,78,0.35)}
 .btn-outline{background:transparent;color:var(--green);border:1.5px solid var(--green-dim)}
-.btn-outline:hover{background:#22c55e18}
+.btn-outline:hover{background:rgba(31,143,78,0.08)}
+.btn-ghost{background:#e9f5ea;color:var(--green-dim);border:1px solid transparent}
+.btn-ghost:hover{background:#dff0e4}
+.btn-sm{padding:.4rem .9rem;font-size:.78rem;border-radius:999px}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
 .preview-wrap{margin-top:1.5rem;display:none;flex-direction:column;align-items:center;gap:1rem}
 .preview-wrap img{width:180px;height:180px;object-fit:cover;border-radius:12px;border:2px solid var(--border)}
 .actions{display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center}
+
+/* ── Feature panels ── */
+.feature-grid{width:100%;max-width:var(--content-width);display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.25rem;margin-top:1.5rem}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.5rem;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:.9rem}
+.panel-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem}
+.panel h3{font-family:'Space Grotesk',sans-serif;font-size:1.15rem}
+.pill{display:inline-flex;align-items:center;gap:.35rem;padding:.25rem .7rem;border-radius:999px;border:1px solid var(--border);font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:#f4f8f2}
+.pill.good{color:#166534;border-color:#86efac;background:#dcfce7}
+.pill.warn{color:#b45309;border-color:#fcd34d;background:#fef3c7}
+.field{display:flex;flex-direction:column;gap:.4rem}
+.label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.input,select,textarea{font-family:'Sora',sans-serif;background:#f4f8f2;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:.6rem .75rem;transition:border-color .2s, box-shadow .2s}
+.input:focus,select:focus,textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(31,143,78,0.15)}
+textarea{resize:vertical;min-height:70px}
+.toggle-group{display:flex;gap:.5rem;flex-wrap:wrap}
+.toggle{border:1px solid var(--border);background:#f4f8f2;color:var(--text);padding:.45rem .75rem;border-radius:999px;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s}
+.toggle.active{background:var(--green);border-color:var(--green-dim);color:#fff;box-shadow:0 6px 16px rgba(31,143,78,0.25)}
+
+.meta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.8rem}
+.meta-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem}
+.meta-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.meta-value{display:block;margin-top:.35rem;font-weight:600;color:var(--text-soft)}
+.quality-meter{display:flex;align-items:center;gap:.75rem}
+.quality-bar-wrap{flex:1;height:8px;background:#e0e9dd;border-radius:999px;overflow:hidden}
+.quality-bar{height:100%;background:linear-gradient(90deg,#1f8f4e,#84cc16);width:0%;transition:width .8s ease}
+.quality-score{font-size:.85rem;font-weight:600;color:var(--text-soft)}
+.quality-notes{list-style:none;display:flex;flex-direction:column;gap:.45rem;font-size:.82rem;color:var(--text-soft)}
 
 /* ── Spinner ── */
 .spinner{display:none;width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--green);border-radius:50%;animation:spin .8s linear infinite;margin:1.5rem auto}
@@ -50,9 +88,10 @@ h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,4vw,2.6rem);bac
 .loading-text{color:var(--muted);font-size:.9rem;text-align:center}
 
 /* ── Results ── */
-#results{width:100%;max-width:580px;display:none;flex-direction:column;gap:1.25rem;margin-top:2rem}
+#results{width:100%;max-width:var(--content-width);display:none;flex-direction:column;gap:1.25rem;margin-top:2rem}
 
-.result-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+.result-actions{display:none;gap:.75rem;flex-wrap:wrap;justify-content:flex-end}
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow)}
 .result-card.highlight{border-color:var(--green-dim)}
 
 .stress-header{display:flex;align-items:center;gap:1.25rem}
@@ -67,27 +106,57 @@ svg.ring{width:90px;height:90px;transform:rotate(-90deg)}
 .conf-row{margin-top:1rem}
 .conf-label{display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted);margin-bottom:.4rem}
 .conf-bar-wrap{background:var(--surface);border-radius:999px;height:6px;overflow:hidden}
-.conf-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,#22c55e,#a3e635);transition:width 1.1s ease}
+.conf-bar{height:100%;border-radius:999px;background:linear-gradient(90deg,#1f8f4e,#84cc16);transition:width 1.1s ease}
 
 .section-title{font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:.65rem}
-.rec-text{font-size:.92rem;line-height:1.65;color:#c4e8cc}
+.rec-text{font-size:.92rem;line-height:1.65;color:var(--text-soft)}
 
-.climate-card{background:linear-gradient(135deg,#0a1929,#0d1f12);border:1px solid #1e3a5f;border-radius:var(--radius);padding:1.2rem 1.5rem;display:flex;gap:.9rem;align-items:flex-start}
+.checklist{display:grid;gap:.6rem;margin-top:.4rem}
+.check-item{display:flex;align-items:flex-start;gap:.6rem;background:var(--surface);border:1px solid var(--border);padding:.6rem .7rem;border-radius:12px;font-size:.86rem;color:var(--text-soft)}
+.check-item input{margin-top:.15rem}
+
+.chip-row{display:flex;flex-wrap:wrap;gap:.5rem;margin:.3rem 0 .9rem}
+.chip{padding:.35rem .7rem;border-radius:999px;background:#e7f3ea;border:1px solid #c4ddcd;font-size:.75rem;font-weight:600;color:#155e37}
+
+.mini-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:.7rem}
+.mini-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.7rem .8rem}
+.mini-label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.mini-value{display:block;margin-top:.35rem;font-weight:600;color:var(--text-soft)}
+
+.climate-card{background:linear-gradient(135deg,#e0f2fe,#ecfdf3);border:1px solid #bae6fd;border-radius:var(--radius);padding:1.2rem 1.5rem;display:flex;gap:.9rem;align-items:flex-start;box-shadow:var(--shadow)}
 .climate-icon{font-size:1.5rem;flex-shrink:0;margin-top:.1rem}
-.climate-text{font-size:.88rem;line-height:1.6;color:#93c5fd}
+.climate-text{font-size:.88rem;line-height:1.6;color:#1d4ed8}
 
-.low-conf-banner{background:#1c1200;border:1px solid #78350f;border-radius:var(--radius);padding:1.1rem 1.4rem;display:flex;gap:.8rem;align-items:flex-start;color:#fbbf24;font-size:.9rem;line-height:1.6}
+.low-conf-banner{background:#fffbeb;border:1px solid #fcd34d;border-radius:var(--radius);padding:1.1rem 1.4rem;display:flex;gap:.8rem;align-items:flex-start;color:#92400e;font-size:.9rem;line-height:1.6}
 
-.error-banner{background:#1a0a0a;border:1px solid #7f1d1d;border-radius:var(--radius);padding:1.1rem 1.4rem;display:flex;gap:.8rem;align-items:flex-start;color:#fca5a5;font-size:.9rem;line-height:1.6}
+.error-banner{background:#fef2f2;border:1px solid #fecaca;border-radius:var(--radius);padding:1.1rem 1.4rem;display:flex;gap:.8rem;align-items:flex-start;color:#b91c1c;font-size:.9rem;line-height:1.6}
+
+/* ── History ── */
+.history-panel{width:100%;max-width:var(--content-width);margin-top:2.2rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.4rem 1.6rem;box-shadow:var(--shadow)}
+.history-header{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:1rem}
+.history-list{display:flex;flex-direction:column;gap:.8rem}
+.history-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;display:flex;flex-direction:column;gap:.5rem}
+.history-row{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+.history-title{font-weight:700;font-size:.95rem;color:var(--text)}
+.history-meta{font-size:.78rem;color:var(--muted)}
+.history-details{display:none;font-size:.82rem;color:var(--text-soft);line-height:1.5}
+.history-details.open{display:block}
 
 /* ── Footer ── */
 footer{margin-top:3rem;color:var(--muted);font-size:.78rem;text-align:center}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.8rem 1rem;font-size:.85rem;color:var(--text-soft);box-shadow:var(--shadow);opacity:0;transform:translateY(8px);transition:opacity .2s ease, transform .2s ease;pointer-events:none;z-index:5}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast[data-tone="good"]{border-color:#86efac;background:#ecfdf3;color:#166534}
+.toast[data-tone="warn"]{border-color:#fcd34d;background:#fffbeb;color:#92400e}
 
 /* ── Anim ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .fade-up{animation:fadeUp .45s ease forwards}
 
 /* ── Responsive ── */
+@media(max-width:640px){.result-actions{justify-content:flex-start}.meta-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.history-row{flex-direction:column;align-items:flex-start}}
 @media(max-width:500px){.stress-header{flex-direction:column;align-items:flex-start}}
 </style>
 </head>
@@ -116,11 +185,96 @@ footer{margin-top:3rem;color:var(--muted);font-size:.78rem;text-align:center}
   <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp,image/bmp"/>
 </div>
 
+<div class="feature-grid" id="feature-grid">
+  <section class="panel" id="profile-panel">
+    <div class="panel-header">
+      <div>
+        <p class="section-title">Crop profile</p>
+        <h3>Field context</h3>
+      </div>
+      <span class="pill" id="profile-status">Optional</span>
+    </div>
+    <div class="field">
+      <label class="label" for="crop-select">Crop type</label>
+      <select id="crop-select">
+        <option value="">Select crop</option>
+        <option value="Tomato">Tomato</option>
+        <option value="Potato">Potato</option>
+        <option value="Corn">Corn</option>
+        <option value="Wheat">Wheat</option>
+        <option value="Rice">Rice</option>
+        <option value="Cotton">Cotton</option>
+        <option value="Soybean">Soybean</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="field">
+      <span class="label">Growth stage</span>
+      <div class="toggle-group" id="stage-group">
+        <button class="toggle" type="button" data-stage="Seedling">Seedling</button>
+        <button class="toggle" type="button" data-stage="Vegetative">Vegetative</button>
+        <button class="toggle" type="button" data-stage="Flowering">Flowering</button>
+        <button class="toggle" type="button" data-stage="Fruiting">Fruiting</button>
+      </div>
+    </div>
+    <div class="field">
+      <label class="label" for="irrigation-select">Irrigation</label>
+      <select id="irrigation-select">
+        <option value="">Select schedule</option>
+        <option value="Rainfed">Rainfed</option>
+        <option value="Weekly">Weekly</option>
+        <option value="2-3x weekly">2-3x weekly</option>
+        <option value="Daily">Daily</option>
+        <option value="Drip">Drip</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="label" for="field-notes">Field notes</label>
+      <textarea id="field-notes" placeholder="Example: heatwave last week, new fertilizer"></textarea>
+    </div>
+  </section>
+
+  <section class="panel" id="quality-panel">
+    <div class="panel-header">
+      <div>
+        <p class="section-title">Image quality</p>
+        <h3>Photo readiness</h3>
+      </div>
+      <span class="pill" id="quality-status">Waiting for image</span>
+    </div>
+    <div class="meta-grid">
+      <div class="meta-item">
+        <span class="meta-label">Resolution</span>
+        <span class="meta-value" id="meta-resolution">-</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">File size</span>
+        <span class="meta-value" id="meta-size">-</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Aspect</span>
+        <span class="meta-value" id="meta-aspect">-</span>
+      </div>
+    </div>
+    <div class="quality-meter">
+      <div class="quality-bar-wrap"><div class="quality-bar" id="quality-bar"></div></div>
+      <span class="quality-score" id="quality-score">-</span>
+    </div>
+    <ul class="quality-notes" id="quality-notes">
+      <li>Upload a bright, centered leaf for best accuracy.</li>
+    </ul>
+  </section>
+</div>
+
 <div class="spinner" id="spinner"></div>
 <p class="loading-text" id="loading-text" style="display:none">Running MobileNetV2 inference…</p>
 
 <!-- Results -->
 <div id="results">
+  <div class="result-actions fade-up" id="result-actions" style="display:none">
+    <button class="btn btn-primary" id="copy-report-btn" type="button">Copy report</button>
+    <button class="btn btn-outline" id="download-report-btn" type="button">Download JSON</button>
+  </div>
   <!-- Error -->
   <div class="error-banner fade-up" id="error-banner" style="display:none">
     <span>⚠️</span><span id="error-msg"></span>
@@ -162,6 +316,32 @@ footer{margin-top:3rem;color:var(--muted);font-size:.78rem;text-align:center}
     <p class="rec-text" id="rec-text">—</p>
   </div>
 
+  <!-- Action plan -->
+  <div class="result-card fade-up" id="action-card" style="display:none">
+    <p class="section-title">Action plan</p>
+    <div class="checklist" id="action-list"></div>
+  </div>
+
+  <!-- Signals -->
+  <div class="result-card fade-up" id="signals-card" style="display:none">
+    <p class="section-title">Signals and risk</p>
+    <div class="chip-row" id="signal-chips"></div>
+    <div class="mini-grid">
+      <div class="mini-card">
+        <span class="mini-label">Urgency</span>
+        <span class="mini-value" id="urgency-label">-</span>
+      </div>
+      <div class="mini-card">
+        <span class="mini-label">Yield impact</span>
+        <span class="mini-value" id="risk-label">-</span>
+      </div>
+      <div class="mini-card">
+        <span class="mini-label">Next check</span>
+        <span class="mini-value" id="next-check-label">-</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Climate -->
   <div class="climate-card fade-up" id="climate-card" style="display:none">
     <span class="climate-icon">🌦️</span>
@@ -172,10 +352,23 @@ footer{margin-top:3rem;color:var(--muted);font-size:.78rem;text-align:center}
   </div>
 </div>
 
+<section class="history-panel" id="history-panel">
+  <div class="history-header">
+    <div>
+      <p class="section-title">Field log</p>
+      <h3>Recent analyses</h3>
+    </div>
+    <button class="btn btn-outline btn-sm" id="clear-history-btn" type="button">Clear history</button>
+  </div>
+  <div class="history-list" id="history-list"></div>
+</section>
+
 <footer>
   Powered by MobileNetV2 · PlantVillage dataset · Built for hackathon<br/>
   <span style="opacity:.5">Predictions are advisory only — consult an agronomist for field decisions</span>
 </footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
 const API = '/api/predict';
@@ -197,16 +390,116 @@ const lowConfMsg    = document.getElementById('low-conf-msg');
 const mainCard      = document.getElementById('main-card');
 const recCard       = document.getElementById('rec-card');
 const climateCard   = document.getElementById('climate-card');
+const resultActions = document.getElementById('result-actions');
+const copyReportBtn = document.getElementById('copy-report-btn');
+const downloadReportBtn = document.getElementById('download-report-btn');
+
+const actionCard = document.getElementById('action-card');
+const actionList = document.getElementById('action-list');
+const signalsCard = document.getElementById('signals-card');
+const signalChips = document.getElementById('signal-chips');
+const urgencyLabel = document.getElementById('urgency-label');
+const riskLabel = document.getElementById('risk-label');
+const nextCheckLabel = document.getElementById('next-check-label');
+
+const cropSelect = document.getElementById('crop-select');
+const irrigationSelect = document.getElementById('irrigation-select');
+const stageButtons = Array.from(document.querySelectorAll('[data-stage]'));
+const notesInput = document.getElementById('field-notes');
+const profileStatus = document.getElementById('profile-status');
+
+const metaResolution = document.getElementById('meta-resolution');
+const metaSize = document.getElementById('meta-size');
+const metaAspect = document.getElementById('meta-aspect');
+const qualityBar = document.getElementById('quality-bar');
+const qualityScore = document.getElementById('quality-score');
+const qualityStatus = document.getElementById('quality-status');
+const qualityNotes = document.getElementById('quality-notes');
+
+const historyList = document.getElementById('history-list');
+const clearHistoryBtn = document.getElementById('clear-history-btn');
+
+const toast = document.getElementById('toast');
+
+const PROFILE_KEY = 'csw-profile-v1';
+const HISTORY_KEY = 'csw-history-v1';
 
 let selectedFile = null;
+let previewUrl = null;
+let selectedStage = '';
+let qualityState = null;
+let lastReport = null;
+let toastTimer = null;
+let qualityToken = 0;
 
 const STRESS_COLORS = {
-  'Healthy':              { stroke:'#22c55e', badge:'#14532d', text:'#86efac' },
-  'Drought Stress':       { stroke:'#f97316', badge:'#431407', text:'#fdba74' },
-  'Nutrient Deficiency':  { stroke:'#eab308', badge:'#422006', text:'#fde047' },
-  'Pest Attack':          { stroke:'#ef4444', badge:'#450a0a', text:'#fca5a5' },
-  'Fungal Disease':       { stroke:'#a855f7', badge:'#2e1065', text:'#d8b4fe' },
+  'Healthy':              { stroke:'#1f8f4e', badge:'#14532d', text:'#bbf7d0' },
+  'Drought Stress':       { stroke:'#f97316', badge:'#7c2d12', text:'#fed7aa' },
+  'Nutrient Deficiency':  { stroke:'#eab308', badge:'#713f12', text:'#fef08a' },
+  'Pest Attack':          { stroke:'#dc2626', badge:'#7f1d1d', text:'#fecaca' },
+  'Fungal Disease':       { stroke:'#0ea5e9', badge:'#0c4a6e', text:'#bae6fd' },
 };
+
+const STRESS_SIGNALS = {
+  'Healthy': {
+    signals: ['Even color', 'Firm edges', 'No spotting'],
+  },
+  'Drought Stress': {
+    signals: ['Leaf curling', 'Dry edges', 'Dull surface'],
+  },
+  'Nutrient Deficiency': {
+    signals: ['Yellowing', 'Pale veins', 'Slow growth'],
+  },
+  'Pest Attack': {
+    signals: ['Chew marks', 'Speckling', 'Sticky residue'],
+  },
+  'Fungal Disease': {
+    signals: ['Dark spots', 'Powdery film', 'Water-soaked lesions'],
+  },
+  'Unknown': {
+    signals: ['Mixed signals', 'Check lighting', 'Retake photo'],
+  },
+};
+
+const STRESS_ACTIONS = {
+  'Healthy': [
+    'Maintain current irrigation schedule',
+    'Monitor weekly for early changes',
+    'Keep leaves dry overnight',
+  ],
+  'Drought Stress': [
+    'Check soil moisture at root depth',
+    'Irrigate early morning or late evening',
+    'Add mulch to reduce evaporation',
+  ],
+  'Nutrient Deficiency': [
+    'Run a soil or leaf test',
+    'Apply balanced fertilizer after testing',
+    'Inspect for uneven growth patterns',
+  ],
+  'Pest Attack': [
+    'Inspect underside of leaves',
+    'Remove heavily infested foliage',
+    'Consider targeted bio-control',
+  ],
+  'Fungal Disease': [
+    'Remove infected leaves safely',
+    'Improve airflow between plants',
+    'Apply approved fungicide if needed',
+  ],
+};
+
+const RETAKE_ACTIONS = [
+  'Retake the photo in bright daylight',
+  'Fill the frame with a single leaf',
+  'Avoid glare and heavy shadows',
+];
+
+const GENERIC_ACTIONS = [
+  'Inspect multiple leaves across the plant',
+  'Capture another close-up for verification',
+  'Track changes over the next 48 hours',
+];
 
 /* ── Drag & Drop ── */
 ['dragenter','dragover'].forEach(e =>
@@ -227,15 +520,38 @@ fileInput.addEventListener('change', () => { if(fileInput.files[0]) handleFile(f
 clearBtn.addEventListener('click', e => { e.stopPropagation(); reset(); });
 analyzeBtn.addEventListener('click', e => { e.stopPropagation(); runAnalysis(); });
 
+stageButtons.forEach(btn => {
+  btn.addEventListener('click', () => setStage(btn.dataset.stage));
+});
+
+[cropSelect, irrigationSelect].forEach(el => el.addEventListener('change', saveProfile));
+notesInput.addEventListener('input', () => saveProfile());
+
+copyReportBtn.addEventListener('click', copyReport);
+downloadReportBtn.addEventListener('click', downloadReport);
+clearHistoryBtn.addEventListener('click', clearHistory);
+
+applyProfile(loadProfile());
+renderHistory(loadHistory());
+setQualityEmpty();
+
 function handleFile(file) {
   const ok = ['image/jpeg','image/png','image/webp','image/bmp'].includes(file.type);
   if (!ok) { showError('Unsupported file type. Please upload a JPEG, PNG, or WebP image.'); return; }
   selectedFile = file;
-  const url = URL.createObjectURL(file);
-  previewImg.src = url;
+  if (previewUrl) URL.revokeObjectURL(previewUrl);
+  previewUrl = URL.createObjectURL(file);
+  previewImg.src = previewUrl;
+  previewImg.onload = () => {
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      previewUrl = null;
+    }
+  };
   previewWrap.style.display = 'flex';
   analyzeBtn.disabled = false;
   hideResults();
+  updateQuality(file);
 }
 
 function reset() {
@@ -244,12 +560,15 @@ function reset() {
   previewImg.src = '';
   previewWrap.style.display = 'none';
   analyzeBtn.disabled = true;
+  lastReport = null;
   hideResults();
+  setQualityEmpty();
 }
 
 function hideResults() {
   results.style.display = 'none';
-  [errorBanner, lowConfBanner, mainCard, recCard, climateCard].forEach(el => el.style.display='none');
+  [resultActions, errorBanner, lowConfBanner, mainCard, recCard, actionCard, signalsCard, climateCard]
+    .forEach(el => el.style.display='none');
 }
 
 async function runAnalysis() {
@@ -262,6 +581,12 @@ async function runAnalysis() {
 
   const fd = new FormData();
   fd.append('file', selectedFile);
+
+  const profile = getProfileData();
+  if (profile.crop) fd.append('crop', profile.crop);
+  if (profile.stage) fd.append('growth_stage', profile.stage);
+  if (profile.irrigation) fd.append('irrigation', profile.irrigation);
+  if (profile.notes) fd.append('notes', profile.notes);
 
   /* Attach geolocation if available */
   try {
@@ -343,11 +668,413 @@ function renderResults(data) {
     document.getElementById('climate-text').textContent = data.climate_alert;
     climateCard.style.display = 'flex';
   }
+
+  renderActionPlan(stress, data.recommendation, data.low_confidence);
+  renderSignals(stress, severity);
+
+  resultActions.style.display = 'flex';
+  lastReport = buildReport(data);
+  addHistoryEntry(lastReport);
 }
 
 function showError(msg) {
   errorMsg.textContent = msg;
+  results.style.display = 'flex';
   errorBanner.style.display = 'flex';
+  resultActions.style.display = 'none';
+  actionCard.style.display = 'none';
+  signalsCard.style.display = 'none';
+}
+
+function setQualityEmpty() {
+  qualityState = null;
+  metaResolution.textContent = '-';
+  metaSize.textContent = '-';
+  metaAspect.textContent = '-';
+  qualityBar.style.width = '0%';
+  qualityScore.textContent = '-';
+  qualityStatus.textContent = 'Waiting for image';
+  qualityStatus.className = 'pill';
+  qualityNotes.innerHTML = '';
+  const li = document.createElement('li');
+  li.textContent = 'Upload a bright, centered leaf for best accuracy.';
+  qualityNotes.appendChild(li);
+}
+
+function updateQuality(file) {
+  qualityToken += 1;
+  const token = qualityToken;
+  if (!file) {
+    setQualityEmpty();
+    return;
+  }
+
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+
+  img.onload = () => {
+    if (token !== qualityToken) {
+      URL.revokeObjectURL(url);
+      return;
+    }
+
+    const width = img.naturalWidth || img.width;
+    const height = img.naturalHeight || img.height;
+    const sizeKb = Math.round(file.size / 1024);
+    const aspect = (width / height).toFixed(2);
+
+    const canvas = document.createElement('canvas');
+    const sample = 48;
+    canvas.width = sample;
+    canvas.height = sample;
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0, sample, sample);
+    const pixels = ctx.getImageData(0, 0, sample, sample).data;
+    let total = 0;
+    for (let i = 0; i < pixels.length; i += 4) {
+      total += pixels[i] * 0.2126 + pixels[i + 1] * 0.7152 + pixels[i + 2] * 0.0722;
+    }
+    const avg = total / (sample * sample);
+
+    let exposure = 'Good';
+    if (avg < 70) exposure = 'Low';
+    if (avg > 185) exposure = 'High';
+
+    const minDim = Math.min(width, height);
+    let score = 100;
+    if (minDim < 700) score -= 12;
+    if (minDim < 500) score -= 18;
+    if (minDim < 350) score -= 20;
+    if (file.size < 80 * 1024) score -= 8;
+    if (file.size > 5 * 1024 * 1024) score -= 6;
+    if (exposure !== 'Good') score -= 15;
+    score = Math.max(35, Math.min(100, score));
+
+    qualityState = {
+      width,
+      height,
+      resolution: `${width}x${height}`,
+      size: `${sizeKb} KB`,
+      exposure,
+      score,
+    };
+
+    metaResolution.textContent = qualityState.resolution;
+    metaSize.textContent = qualityState.size;
+    metaAspect.textContent = aspect;
+    qualityScore.textContent = `${score}/100`;
+    qualityBar.style.width = `${score}%`;
+
+    let tone = 'good';
+    let label = 'Good';
+    if (score < 55) {
+      tone = 'warn';
+      label = 'Needs attention';
+    } else if (score < 75) {
+      tone = 'warn';
+      label = 'Fair';
+    }
+    qualityStatus.textContent = `Quality: ${label}`;
+    qualityStatus.className = `pill ${tone}`;
+
+    const notes = [];
+    if (minDim < 500) notes.push('Resolution is low; move closer or crop tighter.');
+    if (exposure === 'Low') notes.push('Image is dim; add light or avoid shadows.');
+    if (exposure === 'High') notes.push('Image is bright; reduce glare or flash.');
+    if (file.size > 5 * 1024 * 1024) notes.push('Large file size; consider cropping.');
+
+    qualityNotes.innerHTML = '';
+    if (!notes.length) {
+      notes.push('Quality checks look good.');
+    }
+    notes.forEach(note => {
+      const li = document.createElement('li');
+      li.textContent = note;
+      qualityNotes.appendChild(li);
+    });
+
+    URL.revokeObjectURL(url);
+  };
+
+  img.onerror = () => {
+    URL.revokeObjectURL(url);
+    setQualityEmpty();
+  };
+
+  img.src = url;
+}
+
+function setStage(stage) {
+  selectedStage = (selectedStage === stage) ? '' : stage;
+  stageButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.stage === selectedStage));
+  saveProfile();
+}
+
+function getProfileData() {
+  return {
+    crop: cropSelect.value.trim(),
+    stage: selectedStage,
+    irrigation: irrigationSelect.value.trim(),
+    notes: notesInput.value.trim(),
+  };
+}
+
+function saveProfile() {
+  const profile = getProfileData();
+  localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+  updateProfileStatus(profile);
+}
+
+function loadProfile() {
+  try {
+    return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {};
+  } catch {
+    return {};
+  }
+}
+
+function applyProfile(profile) {
+  cropSelect.value = profile.crop || '';
+  irrigationSelect.value = profile.irrigation || '';
+  notesInput.value = profile.notes || '';
+  selectedStage = profile.stage || '';
+  stageButtons.forEach(btn => btn.classList.toggle('active', btn.dataset.stage === selectedStage));
+  updateProfileStatus(profile);
+}
+
+function updateProfileStatus(profile) {
+  const filled = [profile.crop, profile.stage, profile.irrigation, profile.notes].filter(Boolean).length;
+  if (filled === 0) {
+    profileStatus.textContent = 'Optional';
+    profileStatus.className = 'pill';
+    return;
+  }
+  profileStatus.textContent = 'Saved';
+  profileStatus.className = 'pill good';
+}
+
+function renderActionPlan(stress, recommendation, lowConfidence) {
+  const items = buildActionItems(stress, recommendation, lowConfidence);
+  actionList.innerHTML = '';
+  items.forEach(item => {
+    const label = document.createElement('label');
+    label.className = 'check-item';
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    const span = document.createElement('span');
+    span.textContent = item;
+    label.appendChild(input);
+    label.appendChild(span);
+    actionList.appendChild(label);
+  });
+  actionCard.style.display = 'block';
+}
+
+function buildActionItems(stress, recommendation, lowConfidence) {
+  const base = lowConfidence ? RETAKE_ACTIONS : (STRESS_ACTIONS[stress] || GENERIC_ACTIONS);
+  const recItems = parseRecommendation(recommendation);
+  const combined = [...base, ...recItems, ...GENERIC_ACTIONS];
+  const seen = new Set();
+  const deduped = [];
+  combined.forEach(item => {
+    const key = item.toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      deduped.push(item);
+    }
+  });
+  return deduped.slice(0, 6);
+}
+
+function parseRecommendation(text) {
+  if (!text) return [];
+  return text.split(/[.;\n]+/)
+    .map(item => item.trim())
+    .filter(item => item.length > 4)
+    .slice(0, 3);
+}
+
+function renderSignals(stress, severity) {
+  const signals = STRESS_SIGNALS[stress] || STRESS_SIGNALS['Unknown'];
+  signalChips.innerHTML = '';
+  signals.signals.forEach(signal => {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.textContent = signal;
+    signalChips.appendChild(chip);
+  });
+
+  urgencyLabel.textContent = severity >= 70 ? 'Immediate' : (severity >= 40 ? 'Soon' : 'Monitor');
+  riskLabel.textContent = severity >= 70 ? 'High' : (severity >= 40 ? 'Moderate' : 'Low');
+  nextCheckLabel.textContent = severity >= 70 ? 'Within 24h' : (severity >= 40 ? '48 hours' : '3-5 days');
+
+  signalsCard.style.display = 'block';
+}
+
+function buildReport(data) {
+  const profile = getProfileData();
+  return {
+    timestamp: new Date().toISOString(),
+    stress_type: data.stress_type || 'Unknown',
+    severity: data.severity ?? null,
+    confidence: data.confidence ?? null,
+    recommendation: data.recommendation || null,
+    climate_alert: data.climate_alert || null,
+    low_confidence: !!data.low_confidence,
+    crop_profile: profile,
+    image_quality: qualityState,
+  };
+}
+
+function formatReportText(report) {
+  const lines = [
+    'AI Crop Stress Whisperer Report',
+    `Date: ${new Date(report.timestamp).toLocaleString()}`,
+    `Crop: ${report.crop_profile.crop || 'Unspecified'}`,
+    `Growth stage: ${report.crop_profile.stage || 'Unspecified'}`,
+    `Irrigation: ${report.crop_profile.irrigation || 'Unspecified'}`,
+    `Stress: ${report.stress_type}`,
+    `Severity: ${report.severity ?? 'N/A'}/100`,
+    `Confidence: ${report.confidence != null ? (report.confidence * 100).toFixed(1) + '%' : 'N/A'}`,
+    `Recommendation: ${report.recommendation || 'N/A'}`,
+    `Climate alert: ${report.climate_alert || 'None'}`,
+    `Notes: ${report.crop_profile.notes || 'N/A'}`,
+    `Image quality: ${report.image_quality ? report.image_quality.score + '/100 (' + report.image_quality.exposure + ')' : 'N/A'}`,
+    `Resolution: ${report.image_quality ? report.image_quality.resolution : 'N/A'}`,
+    `File size: ${report.image_quality ? report.image_quality.size : 'N/A'}`,
+  ];
+  return lines.join('\n');
+}
+
+async function copyReport() {
+  if (!lastReport) {
+    showToast('Run an analysis first.', 'warn');
+    return;
+  }
+  try {
+    await navigator.clipboard.writeText(formatReportText(lastReport));
+    showToast('Report copied to clipboard.', 'good');
+  } catch (err) {
+    showToast('Copy failed. Please try again.', 'warn');
+  }
+}
+
+function downloadReport() {
+  if (!lastReport) {
+    showToast('Run an analysis first.', 'warn');
+    return;
+  }
+  const blob = new Blob([JSON.stringify(lastReport, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `crop-stress-report-${Date.now()}.json`;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  showToast('Report downloaded.', 'good');
+}
+
+function loadHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+function addHistoryEntry(report) {
+  const entry = {
+    id: Date.now(),
+    timestamp: report.timestamp,
+    stress_type: report.stress_type,
+    severity: report.severity,
+    confidence: report.confidence,
+    recommendation: report.recommendation,
+    crop: report.crop_profile.crop,
+    stage: report.crop_profile.stage,
+    irrigation: report.crop_profile.irrigation,
+  };
+  const entries = loadHistory();
+  entries.unshift(entry);
+  const trimmed = entries.slice(0, 6);
+  localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed));
+  renderHistory(trimmed);
+}
+
+function clearHistory() {
+  const ok = confirm('Clear analysis history?');
+  if (!ok) return;
+  localStorage.removeItem(HISTORY_KEY);
+  renderHistory([]);
+}
+
+function renderHistory(entries) {
+  historyList.innerHTML = '';
+  if (!entries.length) {
+    const empty = document.createElement('p');
+    empty.className = 'tagline';
+    empty.textContent = 'No analyses yet. Run a scan to build your field log.';
+    historyList.appendChild(empty);
+    return;
+  }
+
+  entries.forEach(entry => {
+    const item = document.createElement('div');
+    item.className = 'history-item';
+
+    const row = document.createElement('div');
+    row.className = 'history-row';
+
+    const info = document.createElement('div');
+    const title = document.createElement('div');
+    title.className = 'history-title';
+    title.textContent = entry.stress_type || 'Unknown';
+    const meta = document.createElement('div');
+    meta.className = 'history-meta';
+    const time = new Date(entry.timestamp).toLocaleString();
+    const conf = entry.confidence != null ? (entry.confidence * 100).toFixed(1) + '%' : 'N/A';
+    const sev = entry.severity != null ? entry.severity : 'N/A';
+    const crop = entry.crop || 'Unspecified crop';
+    const stage = entry.stage ? `, ${entry.stage}` : '';
+    meta.textContent = `${time} · Severity ${sev} · ${conf} · ${crop}${stage}`;
+    info.appendChild(title);
+    info.appendChild(meta);
+
+    const actionWrap = document.createElement('div');
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'btn btn-ghost btn-sm';
+    toggle.textContent = 'Details';
+
+    const details = document.createElement('div');
+    details.className = 'history-details';
+    details.textContent = entry.recommendation || 'No recommendation saved.';
+
+    toggle.addEventListener('click', () => {
+      details.classList.toggle('open');
+      toggle.textContent = details.classList.contains('open') ? 'Hide' : 'Details';
+    });
+
+    actionWrap.appendChild(toggle);
+    row.appendChild(info);
+    row.appendChild(actionWrap);
+
+    item.appendChild(row);
+    item.appendChild(details);
+    historyList.appendChild(item);
+  });
+}
+
+function showToast(message, tone) {
+  toast.textContent = message;
+  toast.dataset.tone = tone || 'good';
+  toast.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2400);
 }
 </script>
 </body>
