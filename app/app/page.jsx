@@ -34,7 +34,7 @@ function computeQuality(file, width, height) {
   score += file.size <= 1_500_000 ? 35 : 18
   score += width >= 800 && height >= 800 ? 35 : 18
   const aspect = Math.max(width / height, height / width)
-  score += aspect <= 1.8 ? 30 : 12
+  score += aspect <= 3.0 ? 30 : 12
   return Math.min(100, Math.max(10, Math.round(score)))
 }
 
@@ -319,7 +319,7 @@ export default function CropAppPage() {
 
           {previewUrl && (
             <div className="preview-panel">
-              <img className="preview-img" src={previewUrl} alt="Leaf preview" />
+              <img className="preview-img" src={previewUrl} alt="Leaf / plant preview" />
               <div className="preview-actions">
                 <button className="btn btn-primary" onClick={runAnalysis} disabled={loading}>
                   {loading ? t('appAnalysing') : t('appAnalyze')}
