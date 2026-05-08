@@ -443,9 +443,12 @@ export default function CropAppPage() {
             {history.map((item) => (
               <article key={item.id} className="history-item">
                 <div className="history-row">
-                  <div>
-                    <p className="history-title">{item.stress_type}</p>
-                    <p className="history-meta">{new Date(item.createdAt).toLocaleString()}</p>
+                  <div className="history-content">
+                    <span className="history-leaf">🌿</span>
+                    <div>
+                      <p className="history-title">{item.stress_type}</p>
+                      <p className="history-meta">{new Date(item.createdAt).toLocaleString()}</p>
+                    </div>
                   </div>
                   <div>
                     <span className="badge">{Math.round(item.confidence * 100)}%</span>
