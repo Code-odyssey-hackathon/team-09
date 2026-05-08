@@ -162,6 +162,10 @@ export default function CropAppPage() {
     setHistory((current) => [entry, ...current].slice(0, 8))
   }
 
+  const deleteHistoryItem = (itemId) => {
+    setHistory((current) => current.filter(item => item.id !== itemId))
+  }
+
   const runAnalysis = async () => {
     if (!file) {
       setError(t('appNoFileError'))
@@ -546,8 +550,15 @@ export default function CropAppPage() {
                       <p className="history-meta">{new Date(item.createdAt).toLocaleString()}</p>
                     </div>
                   </div>
-                  <div>
+                  <div className="history-actions">
                     <span className="badge">{Math.round(item.confidence * 100)}%</span>
+                    <button
+                      className="btn btn-ghost btn-sm"
+                      onClick={() => deleteHistoryItem(item.id)}
+                      title="Delete this analysis"
+                    >
+                      🗑️
+                    </button>
                   </div>
                 </div>
                 <p>{item.recommendation}</p>
