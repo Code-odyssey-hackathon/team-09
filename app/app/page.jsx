@@ -276,31 +276,59 @@ export default function CropAppPage() {
     const doc = new jsPDF({ unit: 'pt', format: 'a4' })
     const margin = 40
     const lineHeight = 18
+    const pageWidth = doc.internal.pageSize.getWidth()
     let y = margin
 
     doc.setFontSize(20)
     doc.text('Crop Stress Analysis Report', margin, y)
-    y += 30
-    doc.setFontSize(12)
+    y += 26
+
+    doc.setFontSize(10)
+    doc.setTextColor('#444')
+    doc.text(`Generated: ${new Date().toLocaleString()}`, margin, y)
+    y += 20
+    doc.setTextColor('#000')
 
     const addField = (label, value) => {
       const text = `${label}: ${value}`
-      const lines = doc.splitTextToSize(text, 520)
+      const lines = doc.splitTextToSize(text, pageWidth - margin * 2)
       doc.text(lines, margin, y)
       y += lines.length * lineHeight
-      if (y > 750) {
+      if (y > 740) {
         doc.addPage()
         y = margin
       }
     }
 
+    if (previewBase64 && previewBase64.startsWith('data:image/')) {
+      const imageTypeMatch = previewBase64.match(/^data:image\/(png|jpeg|jpg|webp);base64,/i)
+      const imageType = imageTypeMatch ? imageTypeMatch[1].toUpperCase() : 'PNG'
+      const imgWidth = 180
+      const imgHeight = 180
+      doc.addImage(previewBase64, imageType, pageWidth - imgWidth - margin, margin + 10, imgWidth, imgHeight)
+    }
+
+    doc.setFontSize(14)
+    doc.text('Profile & Image Details', margin, y)
+    y += 20
+    doc.setFontSize(11)
+
+    addField('Crop', profile.crop || 'Not provided')
+    addField('Stage', profile.stage || 'Not provided')
+    addField('Irrigation', profile.irrigation || 'Not provided')
+    addField('Notes', profile.notes || 'Not provided')
+    y += 8
+
+    doc.setFontSize(14)
+    doc.text('Analysis Result', margin, y)
+    y += 22
+    doc.setFontSize(11)
+
     addField('Prediction', report.stress_type || 'Unknown')
     addField('Confidence', report.confidence != null ? `${Math.round(report.confidence * 100)}%` : 'N/A')
     addField('Severity', report.severity != null ? report.severity : 'N/A')
     addField('Recommendation', report.recommendation || 'N/A')
-    if (report.climate_alert) {
-      addField('Climate alert', report.climate_alert)
-    }
+    addField('Climate alert', report.climate_alert || 'No alert detected')
     addField('Model version', report.model_version || 'N/A')
     addField('Processing time', report.processing_time_ms != null ? `${report.processing_time_ms} ms` : 'N/A')
 
