@@ -477,12 +477,7 @@ Built during **Code Odyssey Hackathon** by Team 09.
 ---
 
 ## 👥 Team
-
-| Member | Role |
-|---|---|
-| **Akash** | Backend, ML pipeline, Supabase integration, Vercel deployment, TTS, i18n |
-| **Prajwal Patil** | Project setup, Frontend, UI/UX design |
-
+Team no.9 Beyond Infinity
 ---
 
 ## 📚 References
