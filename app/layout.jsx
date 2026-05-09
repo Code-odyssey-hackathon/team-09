@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import { ThemeProvider } from '../components/ThemeProvider'
 import { TranslationProvider } from '../components/TranslationContext'
 import Navigation from '../components/Navigation'
+import BgSlideshow from '../components/BgSlideshow'
 
 export const metadata = {
   title: 'AI Crop Stress Whisperer',
@@ -13,6 +14,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <ThemeProvider>
+          <BgSlideshow />
           <TranslationProvider>
             <Navigation />
             {children}
@@ -22,3 +24,4 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
+
