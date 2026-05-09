@@ -20,9 +20,27 @@ const LANG_CODE_MAP = {
   fr: 'fr',
 }
 
+function resolveLanguageCode(rawLang, rawLocale) {
+  const normalize = (value) =>
+    typeof value === 'string' ? value.trim().toLowerCase().replace('_', '-') : ''
+
+  // Priority: explicit lang -> locale -> default English
+  const lang = normalize(rawLang)
+  if (LANG_CODE_MAP[lang]) return LANG_CODE_MAP[lang]
+
+  const locale = normalize(rawLocale)
+  const baseLocale = locale.split('-')[0]
+  if (LANG_CODE_MAP[baseLocale]) return LANG_CODE_MAP[baseLocale]
+
+  const baseLang = lang.split('-')[0]
+  if (LANG_CODE_MAP[baseLang]) return LANG_CODE_MAP[baseLang]
+
+  return 'en'
+}
+
 export async function POST(request) {
   try {
-    const { text, lang } = await request.json()
+    const { text, lang, language, locale } = await request.json()
 
     if (!text || typeof text !== 'string' || text.trim().length === 0) {
       return NextResponse.json({ error: 'Missing or empty text.' }, { status: 400 })
@@ -33,8 +51,8 @@ export async function POST(request) {
       return NextResponse.json({ error: 'TTS service not configured.' }, { status: 503 })
     }
 
-    // Resolve voice and language code
-    const languageCode = LANG_CODE_MAP[lang] || 'en'
+    // Resolve voice and language code from i18n values such as `hi`, `hi-IN`, `fr-FR`.
+    const languageCode = resolveLanguageCode(lang || language, locale)
     const voiceId = languageCode === 'en' ? VOICE_EN : VOICE_MULTILINGUAL
 
     /**

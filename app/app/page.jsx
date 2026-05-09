@@ -14,6 +14,119 @@ const DEFAULT_PROFILE = {
   notes: '',
 }
 
+const BASE_RECOMMENDATIONS = {
+  'Healthy': 'Maintain current irrigation schedule. Monitor weekly for early changes. Keep leaves dry overnight.',
+  'Drought Stress': 'Check soil moisture at root depth. Irrigate early morning or late evening. Add mulch to reduce evaporation.',
+  'Nutrient Deficiency': 'Run a soil or leaf test. Apply balanced fertilizer after testing. Inspect for uneven growth patterns.',
+  'Pest Attack': 'Inspect underside of leaves. Remove heavily infested foliage. Consider targeted bio-control.',
+  'Fungal Disease': 'Remove infected leaves safely. Improve airflow between plants. Apply approved fungicide if needed.',
+}
+
+const LOCALIZED_REPORT_TEXT = {
+  hi: {
+    stress: {
+      'Healthy': 'स्वस्थ',
+      'Drought Stress': 'सूखा तनाव',
+      'Nutrient Deficiency': 'पोषक तत्वों की कमी',
+      'Pest Attack': 'कीट प्रकोप',
+      'Fungal Disease': 'फफूंद रोग',
+    },
+    recommendations: {
+      'Healthy': 'वर्तमान सिंचाई कार्यक्रम बनाए रखें। शुरुआती बदलावों के लिए साप्ताहिक निगरानी करें। रात में पत्तियों को सूखा रखें।',
+      'Drought Stress': 'जड़ क्षेत्र की मिट्टी की नमी जांचें। सुबह जल्दी या शाम को सिंचाई करें। वाष्पीकरण कम करने के लिए मल्च डालें।',
+      'Nutrient Deficiency': 'मिट्टी या पत्ती परीक्षण कराएं। परीक्षण के बाद संतुलित उर्वरक दें। असमान वृद्धि पैटर्न जांचें।',
+      'Pest Attack': 'पत्तियों के नीचे की सतह जांचें। अधिक प्रभावित पत्तियां हटाएं। लक्षित जैव-नियंत्रण पर विचार करें।',
+      'Fungal Disease': 'संक्रमित पत्तियां सुरक्षित रूप से हटाएं। पौधों के बीच वायु प्रवाह बढ़ाएं। जरूरत होने पर अनुमोदित फफूंदनाशी का उपयोग करें।',
+    },
+    noAlert: 'आपके क्षेत्र में कोई अत्यधिक मौसम स्थिति नहीं मिली।',
+  },
+  kn: {
+    stress: {
+      'Healthy': 'ಆರೋಗ್ಯಕರ',
+      'Drought Stress': 'ಬರ ಒತ್ತಡ',
+      'Nutrient Deficiency': 'ಪೋಷಕಾಂಶ ಕೊರತೆ',
+      'Pest Attack': 'ಕೀಟ ದಾಳಿ',
+      'Fungal Disease': 'ಹುಳುಬುರುಡೆ ರೋಗ',
+    },
+    recommendations: {
+      'Healthy': 'ಪ್ರಸ್ತುತ ನೀರಾವರಿ ವೇಳಾಪಟ್ಟಿಯನ್ನು ಮುಂದುವರಿಸಿ. ಆರಂಭಿಕ ಬದಲಾವಣೆಗಳಿಗೆ ವಾರಂವಾರ ಗಮನಿಸಿ. ರಾತ್ರಿ ಎಲೆಗಳು ಒಣವಾಗಿರಲಿ.',
+      'Drought Stress': 'ಬೇರು ಭಾಗದ ಮಣ್ಣಿನ ತೇವಾಂಶ ಪರಿಶೀಲಿಸಿ. ಮುಂಜಾನೆ ಅಥವಾ ಸಂಜೆ ನೀರಾವರಿ ಮಾಡಿ. ಆವಿಯಾಗುವಿಕೆ ಕಡಿಸಲು ಮಲ್ಚ್ ಬಳಸಿ.',
+      'Nutrient Deficiency': 'ಮಣ್ಣು ಅಥವಾ ಎಲೆ ಪರೀಕ್ಷೆ ಮಾಡಿಸಿ. ಪರೀಕ್ಷೆಯ ನಂತರ ಸಮತೋಲನ ಗೊಬ್ಬರ ನೀಡಿ. ಅಸಮ ಬೆಳವಣಿಗೆ ಲಕ್ಷಣಗಳನ್ನು ಪರಿಶೀಲಿಸಿ.',
+      'Pest Attack': 'ಎಲೆಗಳ ಕೆಳಭಾಗ ಪರಿಶೀಲಿಸಿ. ಹೆಚ್ಚು ಹಾನಿಗೊಳಗಾದ ಎಲೆಗಳನ್ನು ತೆಗೆದುಹಾಕಿ. ಗುರಿನಿರ್ದಿಷ್ಟ ಜೈವ ನಿಯಂತ್ರಣ ಪರಿಗಣಿಸಿ.',
+      'Fungal Disease': 'ಸೋಂಕಿತ ಎಲೆಗಳನ್ನು ಸುರಕ್ಷಿತವಾಗಿ ತೆಗೆದುಹಾಕಿ. ಸಸಿಗಳ ನಡುವೆ ಗಾಳಿ ಹರಿವನ್ನು ಹೆಚ್ಚಿಸಿ. ಅಗತ್ಯವಿದ್ದರೆ ಅನುಮೋದಿತ ಹುಳುಬುರುಡೆನಾಶಕ ಬಳಸಿ.',
+    },
+    noAlert: 'ನಿಮ್ಮ ಪ್ರದೇಶದಲ್ಲಿ ಯಾವುದೇ ತೀವ್ರ ಹವಾಮಾನ ಎಚ್ಚರಿಕೆ ಕಂಡುಬಂದಿಲ್ಲ.',
+  },
+  ta: {
+    stress: {
+      'Healthy': 'ஆரோக்கியம்',
+      'Drought Stress': 'வறட்சி அழுத்தம்',
+      'Nutrient Deficiency': 'ஊட்டச்சத்து குறைபாடு',
+      'Pest Attack': 'பூச்சி தாக்குதல்',
+      'Fungal Disease': 'பூஞ்சை நோய்',
+    },
+    recommendations: {
+      'Healthy': 'தற்போதைய பாசன அட்டவணையை தொடரவும். ஆரம்ப மாற்றங்களை வாரந்தோறும் கண்காணிக்கவும். இரவில் இலைகள் உலர வைத்திருக்கவும்.',
+      'Drought Stress': 'வேர் பகுதி மண் ஈரத்தை சரிபார்க்கவும். அதிகாலை அல்லது மாலை பாசனம் செய்யவும். ஆவியாகுதல் குறைக்க மல்ச் பயன்படுத்தவும்.',
+      'Nutrient Deficiency': 'மண் அல்லது இலை பரிசோதனை செய்யவும். பரிசோதனைக்குப் பிறகு சமநிலை உரம் பயன்படுத்தவும். ஒழுங்கற்ற வளர்ச்சி அறிகுறிகளை பார்க்கவும்.',
+      'Pest Attack': 'இலைகளின் அடிப்பகுதியை பார்க்கவும். அதிக பாதிக்கப்பட்ட இலைகளை அகற்றவும். குறிவைத்த உயிரியல் கட்டுப்பாட்டை பரிசீலிக்கவும்.',
+      'Fungal Disease': 'தொற்றிய இலைகளை பாதுகாப்பாக அகற்றவும். தாவரங்களுக்கு இடையே காற்றோட்டத்தை அதிகரிக்கவும். தேவையெனில் அனுமதிக்கப்பட்ட பூஞ்சைநாசினி பயன்படுத்தவும்.',
+    },
+    noAlert: 'உங்கள் பகுதியில் கடுமையான வானிலை எச்சரிக்கை இல்லை.',
+  },
+  te: {
+    stress: {
+      'Healthy': 'ఆరోగ్యంగా ఉంది',
+      'Drought Stress': 'ఎండ ఒత్తిడి',
+      'Nutrient Deficiency': 'పోషక లోపం',
+      'Pest Attack': 'పీడక దాడి',
+      'Fungal Disease': 'ఫంగస్ వ్యాధి',
+    },
+    recommendations: {
+      'Healthy': 'ప్రస్తుత నీటి పారుదల షెడ్యూల్ కొనసాగించండి. ప్రారంభ మార్పుల కోసం వారానికి ఒకసారి గమనించండి. రాత్రి ఆకులు ఎండగా ఉండేలా చూడండి.',
+      'Drought Stress': 'వేరుల లోతులో మట్టి తేమను తనిఖీ చేయండి. తెల్లవారుజామున లేదా సాయంత్రం నీరు ఇవ్వండి. ఆవిరి తగ్గించేందుకు మల్చింగ్ చేయండి.',
+      'Nutrient Deficiency': 'మట్టి లేదా ఆకుల పరీక్ష చేయండి. పరీక్ష తర్వాత సమతుల్య ఎరువు వాడండి. అసమాన వృద్ధి లక్షణాలను పరిశీలించండి.',
+      'Pest Attack': 'ఆకుల క్రింది భాగాన్ని పరిశీలించండి. ఎక్కువగా ప్రభావితమైన ఆకులను తొలగించండి. లక్ష్యిత బయో నియంత్రణను పరిగణించండి.',
+      'Fungal Disease': 'సోకిన ఆకులను సురక్షితంగా తొలగించండి. మొక్కల మధ్య గాలి ప్రవాహం మెరుగుపరచండి. అవసరమైతే అనుమతించిన ఫంగిసైడ్ వాడండి.',
+    },
+    noAlert: 'మీ ప్రాంతంలో తీవ్రమైన వాతావరణ హెచ్చరికలు లేవు.',
+  },
+  es: {
+    stress: {
+      'Healthy': 'Saludable',
+      'Drought Stress': 'Estrés por sequía',
+      'Nutrient Deficiency': 'Deficiencia de nutrientes',
+      'Pest Attack': 'Ataque de plagas',
+      'Fungal Disease': 'Enfermedad fúngica',
+    },
+    recommendations: {
+      'Healthy': 'Mantenga el riego actual. Supervise semanalmente cambios tempranos. Mantenga las hojas secas durante la noche.',
+      'Drought Stress': 'Revise la humedad del suelo en la zona de raíces. Riegue temprano por la mañana o al atardecer. Añada mantillo para reducir evaporación.',
+      'Nutrient Deficiency': 'Realice un análisis de suelo o de hoja. Aplique fertilizante balanceado después del análisis. Revise patrones de crecimiento desiguales.',
+      'Pest Attack': 'Inspeccione el envés de las hojas. Retire el follaje muy infestado. Considere un biocontrol dirigido.',
+      'Fungal Disease': 'Retire hojas infectadas de forma segura. Mejore la ventilación entre plantas. Aplique fungicida aprobado si es necesario.',
+    },
+    noAlert: 'No se detectaron condiciones meteorológicas extremas en su zona.',
+  },
+  fr: {
+    stress: {
+      'Healthy': 'Sain',
+      'Drought Stress': 'Stress hydrique',
+      'Nutrient Deficiency': 'Carence nutritive',
+      'Pest Attack': 'Attaque de ravageurs',
+      'Fungal Disease': 'Maladie fongique',
+    },
+    recommendations: {
+      'Healthy': 'Maintenez le calendrier d irrigation actuel. Surveillez chaque semaine les premiers changements. Gardez les feuilles sèches pendant la nuit.',
+      'Drought Stress': 'Vérifiez l humidité du sol à la profondeur des racines. Irriguez tôt le matin ou en soirée. Ajoutez du paillage pour réduire l évaporation.',
+      'Nutrient Deficiency': 'Faites une analyse du sol ou des feuilles. Appliquez un engrais équilibré après l analyse. Vérifiez les schémas de croissance irréguliers.',
+      'Pest Attack': 'Inspectez le dessous des feuilles. Retirez le feuillage fortement infesté. Envisagez un biocontrôle ciblé.',
+      'Fungal Disease': 'Retirez les feuilles infectées en toute sécurité. Améliorez la circulation d air entre les plantes. Appliquez un fongicide approuvé si nécessaire.',
+    },
+    noAlert: 'Aucune condition météo extrême détectée dans votre zone.',
+  },
+}
+
 const PROFILE_KEY = 'csw-profile-v1'
 const HISTORY_KEY = 'csw-history-v1'
 
@@ -37,6 +150,30 @@ function computeQuality(file, width, height) {
   const aspect = Math.max(width / height, height / width)
   score += aspect <= 3.0 ? 30 : 12
   return Math.min(100, Math.max(10, Math.round(score)))
+}
+
+function localizeStressType(stressType, lang) {
+  const map = LOCALIZED_REPORT_TEXT[lang]?.stress
+  return map?.[stressType] || stressType || 'Unknown'
+}
+
+function localizeRecommendation(stressType, recommendation, lang) {
+  const map = LOCALIZED_REPORT_TEXT[lang]?.recommendations
+  if (!map) return recommendation || ''
+
+  if (stressType && map[stressType]) return map[stressType]
+
+  const matchedStressType = Object.entries(BASE_RECOMMENDATIONS)
+    .find(([, value]) => value === recommendation)?.[0]
+  return matchedStressType ? map[matchedStressType] || recommendation : recommendation || ''
+}
+
+function localizeClimateAlert(climateAlert, lang) {
+  if (!climateAlert) return ''
+  if (climateAlert === 'No extreme weather conditions detected in your area.') {
+    return LOCALIZED_REPORT_TEXT[lang]?.noAlert || climateAlert
+  }
+  return climateAlert
 }
 
 export default function CropAppPage() {
@@ -102,6 +239,21 @@ export default function CropAppPage() {
     if (meta.score >= 30) return t('appQualityFair')
     return t('appQualityPoor')
   }, [meta.score, t])
+
+  const localizedStressType = useMemo(() => {
+    if (!report) return ''
+    return localizeStressType(report.stress_type, lang)
+  }, [report, lang])
+
+  const localizedRecommendation = useMemo(() => {
+    if (!report) return ''
+    return localizeRecommendation(report.stress_type, report.recommendation, lang)
+  }, [report, lang])
+
+  const localizedClimateAlert = useMemo(() => {
+    if (!report) return ''
+    return localizeClimateAlert(report.climate_alert, lang)
+  }, [report, lang])
 
   const handleFile = (nextFile) => {
     setError('')
@@ -220,10 +372,11 @@ export default function CropAppPage() {
     setTtsState('loading')
     setTtsError('')
     try {
+      const browserLocale = typeof navigator !== 'undefined' ? navigator.language : ''
       const res = await fetch('/api/tts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text, lang }),
+        body: JSON.stringify({ text, lang, locale: browserLocale }),
       })
       if (!res.ok) {
         const errData = await res.json().catch(() => ({}))
@@ -255,16 +408,16 @@ export default function CropAppPage() {
   useEffect(() => {
     if (!report) return
     const fullText = [
-      `${t('appPrediction')}: ${report.stress_type}.`,
+      `${t('appPrediction')}: ${localizedStressType}.`,
       `${t('appConfidence')}: ${Math.round((report.confidence || 0) * 100)}%.`,
-      `${t('appRecommendation')}: ${report.recommendation}`,
-      report.climate_alert && report.climate_alert !== t('appNoAlert')
-        ? `${t('appClimateMessage')}: ${report.climate_alert}`
+      `${t('appRecommendation')}: ${localizedRecommendation}`,
+      localizedClimateAlert && localizedClimateAlert !== t('appNoAlert')
+        ? `${t('appClimateMessage')}: ${localizedClimateAlert}`
         : '',
     ].filter(Boolean).join(' ')
     speakRecommendation(fullText)
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [report])
+  }, [report, lang])
 
   // Clean up on unmount
   useEffect(() => () => { if (audioRef.current) audioRef.current.pause() }, [])
@@ -497,7 +650,7 @@ export default function CropAppPage() {
           <div className="result-header">
             <div>
               <p className="section-title">{t('appPrediction')}</p>
-              <h2>{report.stress_type || 'Unknown'}</h2>
+              <h2>{localizedStressType || 'Unknown'}</h2>
             </div>
             <span className="badge">{t('appSeverity')} {report.severity ?? '—'}</span>
           </div>
@@ -508,11 +661,11 @@ export default function CropAppPage() {
             </div>
             <div className="result-card">
               <p className="result-label">{t('appRecommendation')}</p>
-              <p>{report.recommendation}</p>
+              <p>{localizedRecommendation}</p>
             </div>
             <div className="result-card">
               <p className="result-label">{t('appClimateMessage')}</p>
-              <p>{report.climate_alert || t('appNoAlert')}</p>
+              <p>{localizedClimateAlert || t('appNoAlert')}</p>
             </div>
           </div>
           <div className="action-row">
@@ -529,11 +682,11 @@ export default function CropAppPage() {
                 ttsState === 'playing'
                   ? stopAudio()
                   : speakRecommendation([
-                      `${t('appPrediction')}: ${report.stress_type}.`,
+                      `${t('appPrediction')}: ${localizedStressType}.`,
                       `${t('appConfidence')}: ${Math.round((report.confidence || 0) * 100)}%.`,
-                      `${t('appRecommendation')}: ${report.recommendation}`,
-                      report.climate_alert && report.climate_alert !== t('appNoAlert')
-                        ? `${t('appClimateMessage')}: ${report.climate_alert}` : '',
+                      `${t('appRecommendation')}: ${localizedRecommendation}`,
+                      localizedClimateAlert && localizedClimateAlert !== t('appNoAlert')
+                        ? `${t('appClimateMessage')}: ${localizedClimateAlert}` : '',
                     ].filter(Boolean).join(' '))
               }
               disabled={ttsState === 'loading'}
@@ -595,13 +748,13 @@ export default function CropAppPage() {
                       <img
                         className="history-thumb"
                         src={item.imageBase64}
-                        alt={item.stress_type}
+                        alt={localizeStressType(item.stress_type, lang)}
                       />
                     ) : (
                       <span className="history-leaf">🌿</span>
                     )}
                     <div>
-                      <p className="history-title">{item.stress_type}</p>
+                      <p className="history-title">{localizeStressType(item.stress_type, lang)}</p>
                       <p className="history-meta">{new Date(item.createdAt).toLocaleString()}</p>
                     </div>
                   </div>
@@ -616,7 +769,7 @@ export default function CropAppPage() {
                     </button>
                   </div>
                 </div>
-                <p>{item.recommendation}</p>
+                <p>{localizeRecommendation(item.stress_type, item.recommendation, lang)}</p>
               </article>
             ))}
           </div>
