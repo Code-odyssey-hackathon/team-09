@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslation } from '@/components/TranslationContext'
 
 // ─── Static seed data ──────────────────────────────────────────────────────────
 const SEED_LISTINGS = [
@@ -112,6 +113,7 @@ const CROP_TYPES = ['All Crops', 'Wheat', 'Rice (Basmati)', 'Tomatoes', 'Mixed V
 const ROLES = ['All', 'Farmers', 'Retailers']
 
 export default function MarketplacePage() {
+  const { t } = useTranslation()
   const [listings, setListings] = useState(SEED_LISTINGS)
   const [filterRole, setFilterRole] = useState('All')
   const [filterCrop, setFilterCrop] = useState('All Crops')
@@ -160,7 +162,7 @@ export default function MarketplacePage() {
     }
     setListings([newListing, ...listings])
     setPostModal(false)
-    setSuccessMsg('Your listing has been posted successfully! 🎉')
+    setSuccessMsg(t('mktSuccess'))
     setTimeout(() => setSuccessMsg(''), 4000)
     setForm({
       type: 'farmer', name: '', location: '', crop: '', quantity: '',
@@ -181,26 +183,23 @@ export default function MarketplacePage() {
       {/* ── Header ─────────────────────────────────────────────────────────── */}
       <header className="mkt-hero">
         <div className="mkt-hero-text">
-          <span className="eyebrow">🌱 AgriConnect Marketplace</span>
-          <h1>Where Farmers Meet Retailers</h1>
-          <p>
-            Browse crop listings, post your produce, and connect directly with
-            verified buyers and sellers — no middlemen, better prices.
-          </p>
+          <span className="eyebrow">🌱 {t('mktEyebrow')}</span>
+          <h1>{t('mktH1')}</h1>
+          <p>{t('mktDesc')}</p>
           <div className="mkt-hero-stats">
             <div className="mkt-stat">
               <span className="mkt-stat-num">2,400+</span>
-              <span className="mkt-stat-label">Farmers</span>
+              <span className="mkt-stat-label">{t('mktFarmers')}</span>
             </div>
             <div className="mkt-stat-sep" />
             <div className="mkt-stat">
               <span className="mkt-stat-num">850+</span>
-              <span className="mkt-stat-label">Retailers</span>
+              <span className="mkt-stat-label">{t('mktRetailers')}</span>
             </div>
             <div className="mkt-stat-sep" />
             <div className="mkt-stat">
               <span className="mkt-stat-num">₹12 Cr+</span>
-              <span className="mkt-stat-label">Traded</span>
+              <span className="mkt-stat-label">{t('mktTraded')}</span>
             </div>
           </div>
         </div>
@@ -209,7 +208,7 @@ export default function MarketplacePage() {
           className="btn btn-primary btn-large mkt-post-btn"
           onClick={() => setPostModal(true)}
         >
-          ＋ Post a Listing
+          {t('mktPostBtn')}
         </button>
       </header>
 
@@ -226,7 +225,7 @@ export default function MarketplacePage() {
           id="marketplace-search"
           className="input mkt-search"
           type="search"
-          placeholder="🔍 Search by crop, farmer, location…"
+          placeholder={t('mktSearchPlaceholder')}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -239,7 +238,7 @@ export default function MarketplacePage() {
                 onClick={() => setFilterRole(r)}
                 id={`role-filter-${r.toLowerCase()}`}
               >
-                {r === 'Farmers' ? '👨‍🌾 Farmers' : r === 'Retailers' ? '🏪 Retailers' : '🌐 All'}
+                {r === 'Farmers' ? t('mktFilterFarmers') : r === 'Retailers' ? t('mktFilterRetailers') : t('mktFilterAll')}
               </button>
             ))}
           </div>
@@ -256,7 +255,7 @@ export default function MarketplacePage() {
           </select>
         </div>
         <p className="mkt-count">
-          Showing <strong>{filtered.length}</strong> listing{filtered.length !== 1 ? 's' : ''}
+          {t('mktShowing')} <strong>{filtered.length}</strong> {filtered.length !== 1 ? t('mktListings') : t('mktListing')}
         </p>
       </section>
 
@@ -265,7 +264,7 @@ export default function MarketplacePage() {
         {filtered.length === 0 ? (
           <div className="mkt-empty">
             <span className="mkt-empty-icon">🌿</span>
-            <p>No listings match your filters. Try adjusting your search.</p>
+            <p>{t('mktNoResults')}</p>
           </div>
         ) : (
           filtered.map((l) => (
@@ -285,7 +284,7 @@ export default function MarketplacePage() {
                   <span className="mkt-location">📍 {l.location}</span>
                 </div>
                 <span className={`mkt-role-badge ${l.type}`}>
-                  {l.type === 'farmer' ? '🌾 Farmer' : '🏪 Retailer'}
+                  {l.type === 'farmer' ? t('mktFarmerRole') : t('mktRetailerRole')}
                 </span>
               </div>
 
@@ -296,15 +295,15 @@ export default function MarketplacePage() {
                 </div>
                 <div className="mkt-details-grid">
                   <div className="mkt-detail">
-                    <span className="mkt-detail-label">Price</span>
+                    <span className="mkt-detail-label">{t('mktPrice2')}</span>
                     <span className="mkt-detail-val mkt-price">{l.price}</span>
                   </div>
                   <div className="mkt-detail">
-                    <span className="mkt-detail-label">Quality</span>
+                    <span className="mkt-detail-label">{t('mktQuality')}</span>
                     <span className="mkt-detail-val">{l.quality}</span>
                   </div>
                   <div className="mkt-detail">
-                    <span className="mkt-detail-label">Availability</span>
+                    <span className="mkt-detail-label">{t('mktAvail')}</span>
                     <span className="mkt-detail-val">{l.harvest}</span>
                   </div>
                 </div>
@@ -323,7 +322,7 @@ export default function MarketplacePage() {
                   className="btn btn-primary"
                   onClick={() => setContactModal(l)}
                 >
-                  Contact {l.type === 'farmer' ? 'Farmer' : 'Retailer'}
+                  {l.type === 'farmer' ? t('mktContactFarmer') : t('mktContactRetailer')}
                 </button>
               </div>
             </article>
@@ -375,7 +374,7 @@ export default function MarketplacePage() {
               </div>
             </div>
             <div className="mkt-contact-box">
-              <p className="mkt-contact-label">📞 Direct Contact</p>
+              <p className="mkt-contact-label">{t('mktDirectContact')}</p>
               <a
                 href={`tel:${contactModal.contact.replace(/\s/g, '')}`}
                 className="mkt-contact-number"
@@ -392,14 +391,14 @@ export default function MarketplacePage() {
                 className="btn btn-primary"
                 id={`whatsapp-btn-${contactModal.id}`}
               >
-                💬 WhatsApp
+                {t('mktWhatsApp')}
               </a>
               <a
                 href={`tel:${contactModal.contact.replace(/\s/g, '')}`}
                 className="btn btn-outline"
                 id={`call-btn-${contactModal.id}`}
               >
-                📞 Call Now
+                {t('mktCallNow')}
               </a>
             </div>
           </div>
@@ -424,13 +423,13 @@ export default function MarketplacePage() {
             >
               ✕
             </button>
-            <h2 className="mkt-modal-title">📋 Post a New Listing</h2>
-            <p className="mkt-modal-sub">Connect with buyers or sellers instantly</p>
+            <h2 className="mkt-modal-title">{t('mktPostTitle')}</h2>
+            <p className="mkt-modal-sub">{t('mktPostSub')}</p>
 
             <form onSubmit={handlePost} className="mkt-form" id="post-listing-form">
               <div className="mkt-form-row">
                 <div className="field">
-                  <label className="label" htmlFor="form-type">I am a</label>
+                  <label className="label" htmlFor="form-type">{t('mktIAm')}</label>
                   <div className="toggle-group">
                     <button
                       type="button"
@@ -438,7 +437,7 @@ export default function MarketplacePage() {
                       className={`toggle ${form.type === 'farmer' ? 'active' : ''}`}
                       onClick={() => setForm({ ...form, type: 'farmer' })}
                     >
-                      👨‍🌾 Farmer
+                      {t('mktFarmerLabel')}
                     </button>
                     <button
                       type="button"
@@ -446,7 +445,7 @@ export default function MarketplacePage() {
                       className={`toggle ${form.type === 'retailer' ? 'active' : ''}`}
                       onClick={() => setForm({ ...form, type: 'retailer' })}
                     >
-                      🏪 Retailer
+                      {t('mktRetailerLabel')}
                     </button>
                   </div>
                 </div>
@@ -454,7 +453,7 @@ export default function MarketplacePage() {
 
               <div className="mkt-form-2col">
                 <div className="field">
-                  <label className="label" htmlFor="form-name">Full Name *</label>
+                  <label className="label" htmlFor="form-name">{t('mktFullName')}</label>
                   <input
                     id="form-name"
                     className="input"
@@ -465,7 +464,7 @@ export default function MarketplacePage() {
                   />
                 </div>
                 <div className="field">
-                  <label className="label" htmlFor="form-location">Location *</label>
+                  <label className="label" htmlFor="form-location">{t('mktLocation')}</label>
                   <input
                     id="form-location"
                     className="input"
@@ -479,7 +478,7 @@ export default function MarketplacePage() {
 
               <div className="mkt-form-2col">
                 <div className="field">
-                  <label className="label" htmlFor="form-crop">Crop / Produce *</label>
+                  <label className="label" htmlFor="form-crop">{t('mktCropProduce')}</label>
                   <input
                     id="form-crop"
                     className="input"
@@ -490,7 +489,7 @@ export default function MarketplacePage() {
                   />
                 </div>
                 <div className="field">
-                  <label className="label" htmlFor="form-quantity">Quantity *</label>
+                  <label className="label" htmlFor="form-quantity">{t('mktQuantity')}</label>
                   <input
                     id="form-quantity"
                     className="input"
@@ -504,7 +503,7 @@ export default function MarketplacePage() {
 
               <div className="mkt-form-2col">
                 <div className="field">
-                  <label className="label" htmlFor="form-price">Price</label>
+                  <label className="label" htmlFor="form-price">{t('mktPrice')}</label>
                   <input
                     id="form-price"
                     className="input"
@@ -514,7 +513,7 @@ export default function MarketplacePage() {
                   />
                 </div>
                 <div className="field">
-                  <label className="label" htmlFor="form-harvest">Availability *</label>
+                  <label className="label" htmlFor="form-harvest">{t('mktAvailability')}</label>
                   <input
                     id="form-harvest"
                     className="input"
@@ -527,7 +526,7 @@ export default function MarketplacePage() {
               </div>
 
               <div className="field">
-                <label className="label" htmlFor="form-description">Description *</label>
+                <label className="label" htmlFor="form-description">{t('mktDescription')}</label>
                 <textarea
                   id="form-description"
                   className="textarea"
@@ -540,7 +539,7 @@ export default function MarketplacePage() {
 
               <div className="mkt-form-2col">
                 <div className="field">
-                  <label className="label" htmlFor="form-contact">Contact Number *</label>
+                  <label className="label" htmlFor="form-contact">{t('mktContact')}</label>
                   <input
                     id="form-contact"
                     className="input"
@@ -551,7 +550,7 @@ export default function MarketplacePage() {
                   />
                 </div>
                 <div className="field">
-                  <label className="label" htmlFor="form-tags">Tags (comma separated)</label>
+                  <label className="label" htmlFor="form-tags">{t('mktTags')}</label>
                   <input
                     id="form-tags"
                     className="input"
@@ -569,10 +568,10 @@ export default function MarketplacePage() {
                   onClick={() => setPostModal(false)}
                   id="cancel-post-btn"
                 >
-                  Cancel
+                  {t('mktCancel')}
                 </button>
                 <button type="submit" className="btn btn-primary" id="submit-post-btn">
-                  🚀 Post Listing
+                  {t('mktSubmit')}
                 </button>
               </div>
             </form>
@@ -582,24 +581,24 @@ export default function MarketplacePage() {
 
       {/* ── How It Works ────────────────────────────────────────────────────── */}
       <section className="mkt-how-it-works">
-        <h2 className="mkt-section-title">How It Works</h2>
+        <h2 className="mkt-section-title">{t('mktHowTitle')}</h2>
         <div className="mkt-steps">
           <div className="mkt-step">
             <div className="mkt-step-icon">📋</div>
-            <h3>Post a Listing</h3>
-            <p>Farmers list their produce with quantity, quality & price. Retailers post their buying requirements.</p>
+            <h3>{t('mktStep1Title')}</h3>
+            <p>{t('mktStep1Desc')}</p>
           </div>
           <div className="mkt-step-arrow">→</div>
           <div className="mkt-step">
             <div className="mkt-step-icon">🔍</div>
-            <h3>Browse & Filter</h3>
-            <p>Filter by crop type, role, or location. Find the perfect match for your needs instantly.</p>
+            <h3>{t('mktStep2Title')}</h3>
+            <p>{t('mktStep2Desc')}</p>
           </div>
           <div className="mkt-step-arrow">→</div>
           <div className="mkt-step">
             <div className="mkt-step-icon">🤝</div>
-            <h3>Connect Directly</h3>
-            <p>Call or WhatsApp directly — no middlemen, no hidden fees. Negotiate and seal the deal.</p>
+            <h3>{t('mktStep3Title')}</h3>
+            <p>{t('mktStep3Desc')}</p>
           </div>
         </div>
       </section>

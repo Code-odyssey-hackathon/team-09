@@ -789,7 +789,7 @@ export default function CropAppPage() {
               {t('appCopyReport')}
             </button>
             <button className="btn btn-outline" type="button" onClick={downloadReport}>
-              {t('appDownloadJSON')}
+              {t('appDownloadPDF')}
             </button>
           </div>
         </section>

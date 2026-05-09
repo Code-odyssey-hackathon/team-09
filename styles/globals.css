@@ -101,11 +101,7 @@ a {
   text-decoration: none;
 }
 
-.page-shell {
-  width: min(1180px, calc(100% - 2rem));
-  margin: 0 auto;
-  padding: 5rem 0 5rem;
-}
+/* .page-shell defined below near navbar styles */
 
 .hero-image-container {
   width: 100%;
@@ -430,26 +426,7 @@ a {
   color: var(--text);
 }
 
-.btn-ghost {
-  background: rgba(255,255,255,0.04);
-  color: var(--text);
-  border: 1px solid rgba(255,255,255,0.08);
-}
-
-.btn-ghost:hover {
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.14);
-}
-
-[data-theme="light"] .btn-ghost {
-  background: rgba(0,0,0,0.04);
-  color: var(--text);
-  border: 1px solid rgba(0,0,0,0.08);
-}
-
-[data-theme="light"] .btn-ghost:hover {
-  background: rgba(0,0,0,0.08);
-}
+/* .btn-ghost defined below near history-actions */
 
 .hero-highlight,
 .card,
@@ -541,31 +518,7 @@ a {
   margin-bottom: 3rem;
 }
 
-.feature-card {
-  padding: 2rem 2.2rem;
-  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
-  position: relative;
-  overflow: hidden;
-}
-
-.feature-card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, transparent, rgba(34,197,94,0.04));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-
-.feature-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.30), 0 0 0 1px rgba(34,197,94,0.15) inset;
-}
-
-.feature-card:hover::before {
-  opacity: 1;
-}
+/* .feature-card and its ::before defined below in the premium polish section */
 
 .feature-card h3,
 .result-header h2,
@@ -583,30 +536,7 @@ a {
   gap: 0.9rem;
 }
 
-.pill {
-  display: inline-flex;
-  padding: 0.6rem 1.2rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, rgba(34,197,94,0.18), rgba(45,212,191,0.12));
-  border: 1px solid rgba(34,197,94,0.28);
-  color: var(--green-light);
-  font-size: 0.82rem;
-  font-weight: 700;
-  transition: all 0.3s var(--ease-spring);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(34,197,94,0.15), inset 0 1px 0 rgba(255,255,255,0.12);
-}
-
-.pill:hover {
-  background: linear-gradient(135deg, rgba(34,197,94,0.28), rgba(45,212,191,0.20));
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(34,197,94,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
-}
-
-[data-theme="light"] .pill {
-  color: var(--green-dark);
-  border-color: rgba(22,163,74,0.25);
-}
+/* .pill defined below in enhanced pill styles section */
 
 .upload-card {
   display: grid;
@@ -1211,7 +1141,7 @@ select:focus {
   gap: 0.75rem;
 }
 
-.btn-sm {
+.btn.btn-sm {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
   border-radius: 6px;
@@ -1235,320 +1165,9 @@ select:focus {
 [data-theme="light"] .btn-ghost:hover {
   background: rgba(0, 0, 0, 0.1);
 }
-.pricing-header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
+/* Pricing styles defined below in the premium glassmorphism section */
 
-.pricing-header h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, var(--green), var(--teal));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.pricing-header p {
-  font-size: 1.25rem;
-  color: var(--text-soft);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 2rem;
-  margin-bottom: 4rem;
-}
-
-.pricing-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 2rem;
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.pricing-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--green);
-  box-shadow: var(--glow-shadow);
-}
-
-.pricing-card.popular {
-  border-color: var(--green);
-  box-shadow: var(--glow-shadow);
-}
-
-.popular-badge {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, var(--green), var(--teal));
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.plan-header h3 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-.plan-price {
-  display: flex;
-  align-items: baseline;
-  gap: 0.25rem;
-  margin-bottom: 2rem;
-}
-
-.currency {
-  font-size: 1.25rem;
-  color: var(--text-soft);
-}
-
-.amount {
-  font-size: 3rem;
-  font-weight: 800;
-  color: var(--green);
-}
-
-.interval {
-  font-size: 1.25rem;
-  color: var(--text-soft);
-}
-
-.plan-features {
-  margin-bottom: 2rem;
-}
-
-.plan-features ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.plan-features li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid var(--border);
-  color: var(--text-soft);
-}
-
-.plan-features li:last-child {
-  border-bottom: none;
-}
-
-.plan-limits {
-  margin-bottom: 2rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border);
-}
-
-.limit-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-  font-size: 0.875rem;
-}
-
-.limit-label {
-  color: var(--text-soft);
-}
-
-.limit-value {
-  color: var(--text);
-  font-weight: 500;
-}
-
-.pricing-footer {
-  text-align: center;
-  color: var(--text-soft);
-}
-
-.pricing-footer p {
-  margin-bottom: 1rem;
-}
-
-/* ── Subscription Page Styles ─────────────────────────────────────────────── */
-.subscription-header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.subscription-header h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, var(--green), var(--teal));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.subscription-header p {
-  font-size: 1.25rem;
-  color: var(--text-soft);
-}
-
-.subscription-details {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.current-plan-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 2rem;
-  margin-bottom: 3rem;
-}
-
-.current-plan-card h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-}
-
-.plan-info {
-  margin-bottom: 2rem;
-}
-
-.plan-info h3 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.plan-info .plan-price {
-  margin-bottom: 1rem;
-}
-
-.status-badge {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  border-radius: 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.status-badge.active {
-  background: rgba(34, 197, 94, 0.2);
-  color: var(--green);
-}
-
-.cancel-notice {
-  color: var(--amber);
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-}
-
-.usage-section h4 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.usage-bar {
-  width: 100%;
-  height: 8px;
-  background: var(--surface-mid);
-  border-radius: 4px;
-  margin-bottom: 0.5rem;
-  overflow: hidden;
-}
-
-.usage-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--green), var(--teal));
-  border-radius: 4px;
-  transition: width 0.3s ease;
-}
-
-.usage-text {
-  font-size: 0.875rem;
-  color: var(--text-soft);
-  text-align: center;
-}
-
-.plan-actions {
-  margin-top: 2rem;
-  padding-top: 2rem;
-  border-top: 1px solid var(--border);
-}
-
-.upgrade-section h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
-}
-
-.plans-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.plan-card.upgrade-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  transition: all 0.3s ease;
-}
-
-.plan-card.upgrade-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--green);
-}
-
-.plan-card h3 {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.plan-card .plan-price {
-  margin-bottom: 1rem;
-}
-
-.plan-card ul {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 1.5rem;
-}
-
-.plan-card li {
-  padding: 0.25rem 0;
-  font-size: 0.875rem;
-  color: var(--text-soft);
-}
-
-.no-subscription {
-  text-align: center;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 3rem 2rem;
-}
-
-.no-subscription h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-.no-subscription p {
-  color: var(--text-soft);
-  margin-bottom: 2rem;
-}
+/* Subscription page styles defined below in the glassmorphism section */
 
 .lang-flag {
   font-size: 1rem;
@@ -1952,8 +1571,6 @@ select:focus {
   color: var(--green-light);
   font-size: 0.82rem;
   font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
   transition: all 0.3s var(--ease-spring);
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 8px rgba(34,197,94,0.15), inset 0 1px 0 rgba(255,255,255,0.12);

@@ -68,10 +68,10 @@ export default function HomePage() {
       {/* Call to action section */}
       <section className="cta-section">
         <div className="cta-content">
-          <h2>Ready to Protect Your Crops?</h2>
-          <p>Join thousands of farmers using AI-powered diagnostics to maximize yields and minimize losses.</p>
+          <h2>{t('homeCTAH2')}</h2>
+          <p>{t('homeCTADesc')}</p>
           <Link href="/app" className="btn btn-primary btn-large">
-            Start Analyzing Now
+            {t('homeCTABtn')}
           </Link>
         </div>
       </section>
