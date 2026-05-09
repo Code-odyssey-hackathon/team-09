@@ -56,6 +56,12 @@ export default function Navigation() {
             Subscription
           </Link>
           <Link
+            href="/marketplace"
+            className={`navbar-link ${pathname === '/marketplace' ? 'active' : ''}`}
+          >
+            🌾 Marketplace
+          </Link>
+          <Link
             href="/auth"
             className={`navbar-link ${pathname === '/auth' ? 'active' : ''}`}
           >
