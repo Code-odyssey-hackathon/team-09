@@ -1,8 +1,8 @@
 """
 AI Crop Stress Whisperer — Prediction Serverless Function
 
-Accepts a multipart POST with an image file, runs MobileNetV2 ONNX inference,
-and returns structured stress diagnostics.
+Accepts a multipart POST with an image file (leaf, full plant, tree, or crop),
+runs MobileNetV2 ONNX inference, and returns structured stress diagnostics.
 
 Model strategy:
   1. If api/model/model.onnx exists → run real ONNX inference.
@@ -239,10 +239,11 @@ class handler(BaseHTTPRequestHandler):
     def do_GET(self):
         self._send_json(200, {
             "service": "AI Crop Stress Whisperer",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "runtime": "onnxruntime" if not _demo_mode else "demo",
             "status": "ready",
             "categories": STRESS_CATEGORIES,
+            "supported_subjects": ["leaf", "full plant", "tree", "crop"],
         })
 
     def do_POST(self):
@@ -305,7 +306,7 @@ class handler(BaseHTTPRequestHandler):
                     "recommendation": (
                         "Low confidence — the model is uncertain about this image. "
                         "Please upload a clearer, well-lit photo of the affected "
-                        "leaf or plant area for a more reliable diagnosis."
+                        "leaf, plant, tree, or crop area for a more reliable diagnosis."
                     ),
                     "climate_alert": climate_alert,
                     "low_confidence": True,

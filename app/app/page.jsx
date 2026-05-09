@@ -606,7 +606,7 @@ export default function CropAppPage() {
 
           {previewUrl && (
             <div className="preview-panel">
-              <img className="preview-img" src={previewUrl} alt="Leaf / plant preview" />
+              <img className="preview-img" src={previewUrl} alt="Leaf / plant / tree / crop preview" />
               <div className="preview-actions">
                 <button className="btn btn-primary" onClick={runAnalysis} disabled={loading}>
                   {loading ? t('appAnalysing') : t('appAnalyze')}
