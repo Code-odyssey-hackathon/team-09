@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { jsPDF } from 'jspdf'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from '../../components/TranslationContext'
+import { useTranslation, TRANSLATIONS } from '../../components/TranslationContext'
 
 const STAGE_KEYS = ['Seedling', 'Vegetative', 'Flowering', 'Fruiting']
 
@@ -168,13 +168,84 @@ function localizeRecommendation(stressType, recommendation, lang) {
   return matchedStressType ? map[matchedStressType] || recommendation : recommendation || ''
 }
 
+
+// Sky-condition phrases the API may return (lowercase keys match API output)
+const KNOWN_SKY_CONDITIONS = [
+  'clear sky', 'few clouds', 'scattered clouds', 'broken clouds', 'overcast clouds',
+  'light rain', 'moderate rain', 'heavy intensity rain', 'thunderstorm',
+  'snow', 'mist', 'fog', 'haze', 'smoke', 'drizzle',
+]
+
+// Risk phrases the API may return (lowercase keys)
+const KNOWN_RISK_PHRASES = [
+  'no immediate climate risk to crops',
+  'high temperature stress risk',
+  'frost risk detected',
+  'heavy rain may cause waterlogging',
+  'drought conditions likely',
+  'strong wind risk',
+]
+
+/**
+ * Parse a dynamic weather alert string of the form:
+ *   "Current conditions in {city}: {sky}, {temp}°C, {hum}% humidity — {risk}."
+ * Returns null if parsing fails (unknown format).
+ */
+function parseWeatherAlert(alert) {
+  // Match: anything after "Current conditions in " up to ":"
+  const headerMatch = alert.match(/^Current conditions in (.+?):\s*(.+)$/)
+  if (!headerMatch) return null
+
+  const city = headerMatch[1].trim()
+  const rest = headerMatch[2].trim()
+
+  // rest expected: "{sky}, {temp}°C, {hum}% humidity — {risk}."
+  const bodyMatch = rest.match(/^(.+?),\s*([\d.]+)°C,\s*([\d.]+)%\s*humidity\s*[—–-]\s*(.+?)\.?$/)
+  if (!bodyMatch) return null
+
+  return {
+    city,
+    sky: bodyMatch[1].trim().toLowerCase(),
+    temp: bodyMatch[2],
+    hum: bodyMatch[3],
+    risk: bodyMatch[4].trim().toLowerCase(),
+  }
+}
+
 function localizeClimateAlert(climateAlert, lang) {
   if (!climateAlert) return ''
+
+  // Hardcoded "no alert" string from API
   if (climateAlert === 'No extreme weather conditions detected in your area.') {
     return LOCALIZED_REPORT_TEXT[lang]?.noAlert || climateAlert
   }
-  return climateAlert
+
+  // Try to parse the structured weather sentence
+  const parsed = parseWeatherAlert(climateAlert)
+  if (!parsed) return climateAlert   // unknown format — return raw
+
+  const langData = TRANSLATIONS[lang] ?? TRANSLATIONS['en']
+
+  // Look up sky condition translation (case-insensitive key search)
+  const skyKey = KNOWN_SKY_CONDITIONS.find((k) => parsed.sky.includes(k)) ?? parsed.sky
+  const localSky = langData.weatherSky?.[skyKey] ?? parsed.sky
+
+  // Look up risk phrase translation
+  const riskKey = KNOWN_RISK_PHRASES.find((k) => parsed.risk.includes(k)) ?? parsed.risk
+  const localRisk = langData.weatherRisk?.[riskKey] ?? parsed.risk
+
+  // Apply the sentence template
+  const template = langData.weatherTemplate
+    ?? 'Current conditions in {city}: {sky}, {temp}°C, {hum}% humidity — {risk}.'
+
+  return template
+    .replace('{city}', parsed.city)
+    .replace('{sky}', localSky)
+    .replace('{temp}', parsed.temp)
+    .replace('{hum}', parsed.hum)
+    .replace('{risk}', localRisk)
 }
+
 
 export default function CropAppPage() {
   const inputRef = useRef(null)
