@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslation } from '@/components/TranslationContext'
+import { useTranslation } from '../../components/TranslationContext'
 
 // ─── Static seed data ──────────────────────────────────────────────────────────
 const SEED_LISTINGS = [
