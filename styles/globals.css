@@ -2013,3 +2013,289 @@ select:focus {
   background-clip: text;
 }
 /* ─────────────────────────────────────────────────────────────────────────── */
+
+/* ══════════════════════════════════════════════════
+   PRICING PAGE
+══════════════════════════════════════════════════ */
+.pricing-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.pricing-header h1 {
+  margin: 0.5rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #e4f5e1 0%, #4ade80 50%, #2dd4bf 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pricing-header p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  max-width: 480px;
+  margin: 0;
+}
+
+/* 3-column grid for plan cards */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.75rem;
+  align-items: stretch;
+}
+
+/* Individual plan card */
+.pricing-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  padding: 2rem 1.75rem;
+  border-radius: var(--radius);
+  background: rgba(6, 22, 12, 0.55);
+  backdrop-filter: blur(28px) saturate(175%);
+  -webkit-backdrop-filter: blur(28px) saturate(175%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.30),
+    0 2px 12px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.10);
+  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 16px 56px rgba(0, 0, 0, 0.40),
+    0 4px 16px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    var(--glow-shadow);
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+/* Popular / highlighted card */
+.pricing-card.popular {
+  border-color: rgba(34, 197, 94, 0.45);
+  background: rgba(8, 28, 16, 0.70);
+  box-shadow:
+    0 8px 40px rgba(34, 197, 94, 0.20),
+    0 2px 12px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(34, 197, 94, 0.20);
+}
+
+.pricing-card.popular:hover {
+  border-color: rgba(34, 197, 94, 0.65);
+  box-shadow:
+    0 20px 64px rgba(34, 197, 94, 0.30),
+    0 6px 20px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(34, 197, 94, 0.25);
+}
+
+[data-theme="light"] .pricing-card {
+  background: rgba(255, 255, 255, 0.70);
+  border: 1px solid rgba(34, 197, 94, 0.14);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+[data-theme="light"] .pricing-card.popular {
+  border-color: rgba(22, 163, 74, 0.35);
+  box-shadow: 0 8px 32px rgba(22, 163, 74, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Popular badge */
+.popular-badge {
+  position: absolute;
+  top: -1px;
+  right: 1.5rem;
+  padding: 0.35rem 1rem;
+  border-radius: 0 0 12px 12px;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.45);
+}
+
+/* Plan icon */
+.plan-icon {
+  font-size: 2.4rem;
+  line-height: 1;
+}
+
+/* Plan name + price row */
+.plan-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plan-header h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.2rem;
+}
+
+.plan-price .currency {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--green-light);
+}
+
+.plan-price .amount {
+  font-size: 2.4rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--text);
+  line-height: 1;
+}
+
+.plan-price .interval {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-left: 0.1rem;
+}
+
+.price-free {
+  font-size: 2.4rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+  background: linear-gradient(135deg, #4ade80, #2dd4bf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Feature list */
+.plan-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  flex: 1; /* push limits + button down */
+}
+
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.9rem;
+  color: var(--text-soft);
+  line-height: 1.45;
+}
+
+.feature-check {
+  flex-shrink: 0;
+  width: 1.2rem;
+  height: 1.2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(34, 197, 94, 0.18);
+  color: var(--green-light);
+  font-size: 0.7rem;
+  font-weight: 800;
+  margin-top: 0.1rem;
+}
+
+/* Usage limits */
+.plan-limits {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+[data-theme="light"] .plan-limits {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: rgba(0, 0, 0, 0.07);
+}
+
+.limit-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.limit-label {
+  color: var(--muted);
+}
+
+.limit-value {
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* CTA button */
+.plan-cta {
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+
+.plan-cta:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Footer */
+.pricing-footer {
+  margin-top: 3rem;
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.92rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pricing-link {
+  color: var(--green-light);
+  text-decoration: underline;
+  text-decoration-color: rgba(74, 222, 128, 0.4);
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.pricing-link:hover {
+  color: var(--teal);
+}
+
+[data-theme="light"] .pricing-link {
+  color: var(--green-dark);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+  .pricing-header h1 {
+    font-size: 1.9rem;
+  }
+}
