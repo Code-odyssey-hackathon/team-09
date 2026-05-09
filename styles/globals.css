@@ -1639,6 +1639,119 @@ select:focus {
 /* ══════════════════════════════════════════════════
    PRICING PAGE
 ══════════════════════════════════════════════════ */
+
+/* ── Current-plan banner ── */
+.current-plan-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.4rem 1.8rem;
+  margin-bottom: 2.5rem;
+  border-radius: var(--radius);
+  background: rgba(34,197,94,0.08);
+  border: 1px solid rgba(34,197,94,0.28);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(34,197,94,0.12), inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.cpb-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+  min-width: 200px;
+}
+
+.cpb-icon { font-size: 2rem; }
+
+.cpb-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0 0 0.25rem;
+}
+
+.cpb-name {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--green-light);
+}
+
+.cpb-usage {
+  flex: 2;
+  min-width: 200px;
+}
+
+.usage-bar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.10);
+  overflow: hidden;
+  margin: 0.4rem 0;
+}
+
+.usage-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--teal));
+  border-radius: 999px;
+  transition: width 0.5s var(--ease-out);
+}
+
+.usage-text {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.cpb-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.cancel-notice {
+  font-size: 0.78rem;
+  color: var(--amber);
+}
+
+.btn-sm {
+  padding: 0.5rem 1rem;
+  font-size: 0.82rem;
+}
+
+/* Active plan card highlight */
+.pricing-card.active-plan {
+  border-color: rgba(34,197,94,0.45);
+  background: rgba(34,197,94,0.06);
+  box-shadow: 0 8px 32px rgba(34,197,94,0.18), 0 0 0 2px rgba(34,197,94,0.18) inset;
+}
+
+.active-badge {
+  position: absolute;
+  top: -1px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--green), var(--teal));
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 0.3rem 0.9rem;
+  border-radius: 0 0 12px 12px;
+  white-space: nowrap;
+}
+
+[data-theme="light"] .current-plan-banner {
+  background: rgba(34,197,94,0.06);
+  border-color: rgba(34,197,94,0.22);
+}
+
 .pricing-header {
   text-align: center;
   margin-bottom: 3.5rem;
