@@ -10,6 +10,21 @@ export default function PricingPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const formatPrice = (pricePaisa, currency = 'INR') => {
+    if (pricePaisa === 0) return '0'
+    const value = Number(pricePaisa || 0) / 100
+    return new Intl.NumberFormat('en-IN', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(value)
+  }
+
+  const currencySymbol = (currency = 'INR') => {
+    if (currency === 'INR') return '₹'
+    if (currency === 'USD') return '$'
+    return currency
+  }
+
   useEffect(() => {
     fetchPlans()
   }, [])
@@ -29,9 +44,12 @@ export default function PricingPage() {
   }
 
   const handleSubscribe = async (planId) => {
-    // In a real app, this would redirect to payment processing
-    // For now, we'll simulate subscription creation
-    const userId = localStorage.getItem('userId') || 'demo-user'
+    const userId = localStorage.getItem('userId')
+    if (!userId) {
+      alert('Please login before subscribing to a plan.')
+      window.location.href = '/auth'
+      return
+    }
 
     try {
       const response = await fetch('/api/subscriptions', {
@@ -42,7 +60,8 @@ export default function PricingPage() {
 
       const data = await response.json()
       if (response.ok) {
-        alert(`Successfully subscribed to ${data.subscription.plan.name}!`)
+        const planName = data.subscription?.plan?.name || 'selected plan'
+        alert(`Successfully subscribed to ${planName}!`)
         // Redirect to dashboard or app
         window.location.href = '/app'
       } else {
@@ -84,8 +103,8 @@ export default function PricingPage() {
             <div className="plan-header">
               <h3>{plan.name}</h3>
               <div className="plan-price">
-                <span className="currency">{plan.currency}</span>
-                <span className="amount">{plan.price}</span>
+                <span className="currency">{currencySymbol(plan.currency)}</span>
+                <span className="amount">{formatPrice(plan.price, plan.currency)}</span>
                 <span className="interval">/{plan.interval}</span>
               </div>
             </div>
@@ -121,7 +140,9 @@ export default function PricingPage() {
               className={`btn ${plan.popular ? 'btn-primary' : 'btn-outline'}`}
               onClick={() => handleSubscribe(plan.id)}
             >
-              {plan.price === 0 ? 'Get Started Free' : `Subscribe for ₹${plan.price}`}
+              {plan.price === 0
+                ? 'Get Started Free'
+                : `Subscribe for ${currencySymbol(plan.currency)}${formatPrice(plan.price, plan.currency)}`}
             </button>
           </div>
         ))}
@@ -129,7 +150,7 @@ export default function PricingPage() {
 
       <div className="pricing-footer">
         <p>All plans include our core AI-powered crop stress analysis technology.</p>
-        <p>Need a custom enterprise solution? <Link href="/contact">Contact us</Link></p>
+        <p>Need help picking a plan? <Link href="/subscription">Manage subscriptions</Link></p>
       </div>
     </main>
   )

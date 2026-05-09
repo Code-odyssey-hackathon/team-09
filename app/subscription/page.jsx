@@ -12,12 +12,32 @@ export default function SubscriptionPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  const formatPrice = (pricePaisa, currency = 'INR') => {
+    if (pricePaisa === 0) return '0'
+    const value = Number(pricePaisa || 0) / 100
+    return new Intl.NumberFormat('en-IN', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(value)
+  }
+
+  const currencySymbol = (currency = 'INR') => {
+    if (currency === 'INR') return '₹'
+    if (currency === 'USD') return '$'
+    return currency
+  }
+
   useEffect(() => {
     fetchData()
   }, [])
 
   const fetchData = async () => {
-    const userId = localStorage.getItem('userId') || 'demo-user'
+    const userId = localStorage.getItem('userId')
+    if (!userId) {
+      setError('Please login to view subscription details.')
+      setLoading(false)
+      return
+    }
 
     try {
       // Fetch subscription
@@ -42,7 +62,12 @@ export default function SubscriptionPage() {
   }
 
   const handleUpgrade = async (planId) => {
-    const userId = localStorage.getItem('userId') || 'demo-user'
+    const userId = localStorage.getItem('userId')
+    if (!userId) {
+      alert('Please login to upgrade your plan.')
+      window.location.href = '/auth'
+      return
+    }
 
     try {
       const response = await fetch('/api/subscriptions', {
@@ -53,7 +78,8 @@ export default function SubscriptionPage() {
 
       const data = await response.json()
       if (response.ok) {
-        alert(`Successfully upgraded to ${data.subscription.plan.name}!`)
+        const planName = data.subscription?.plan?.name || 'selected plan'
+        alert(`Successfully upgraded to ${planName}!`)
         fetchData() // Refresh data
       } else {
         alert(data.error || 'Upgrade failed')
@@ -64,11 +90,16 @@ export default function SubscriptionPage() {
   }
 
   const handleCancel = async () => {
-    if (!confirm('Are you sure you want to cancel your subscription? It will remain active until the end of your current billing period.')) {
+    if (!confirm('Are you sure you want to cancel your subscription?')) {
       return
     }
 
-    const userId = localStorage.getItem('userId') || 'demo-user'
+    const userId = localStorage.getItem('userId')
+    if (!userId) {
+      alert('Please login to manage your subscription.')
+      window.location.href = '/auth'
+      return
+    }
 
     try {
       const response = await fetch(`/api/subscriptions?userId=${userId}`, {
@@ -77,7 +108,7 @@ export default function SubscriptionPage() {
 
       const data = await response.json()
       if (response.ok) {
-        alert('Subscription cancelled. You will continue to have access until the end of your current billing period.')
+        alert('Subscription cancelled successfully.')
         fetchData() // Refresh data
       } else {
         alert(data.error || 'Cancellation failed')
@@ -103,9 +134,13 @@ export default function SubscriptionPage() {
     )
   }
 
-  const currentPlan = subscription?.plan
+  const currentPlan = subscription?.plan || subscription?.subscription_plans
+  const analysesCount = usage?.analysesCount ?? usage?.analyses_count ?? 0
+  const cancelAtPeriodEnd = subscription?.cancelAtPeriodEnd || subscription?.status === 'cancelled'
+  const currentPeriodEnd = subscription?.currentPeriodEnd || subscription?.current_period_end
+  const hasValidSubscription = Boolean(subscription && currentPlan)
   const usagePercent = usage && currentPlan ?
-    (currentPlan.limits.analysesPerMonth === -1 ? 0 : (usage.analysesCount / currentPlan.limits.analysesPerMonth) * 100) : 0
+    (currentPlan.limits.analysesPerMonth === -1 ? 0 : (analysesCount / currentPlan.limits.analysesPerMonth) * 100) : 0
 
   return (
     <main className="page-shell">
@@ -114,24 +149,24 @@ export default function SubscriptionPage() {
         <p>Manage your plan and monitor your usage</p>
       </div>
 
-      {subscription ? (
+      {hasValidSubscription ? (
         <div className="subscription-details">
           <div className="current-plan-card">
             <h2>Current Plan</h2>
             <div className="plan-info">
               <h3>{currentPlan.name}</h3>
               <div className="plan-price">
-                <span className="currency">$</span>
-                <span className="amount">{currentPlan.price}</span>
+                <span className="currency">{currencySymbol(currentPlan.currency)}</span>
+                <span className="amount">{formatPrice(currentPlan.price, currentPlan.currency)}</span>
                 <span className="interval">/{currentPlan.interval}</span>
               </div>
               <div className="plan-status">
                 <span className={`status-badge ${subscription.status}`}>
                   {subscription.status}
                 </span>
-                {subscription.cancelAtPeriodEnd && (
+                {cancelAtPeriodEnd && currentPeriodEnd && (
                   <span className="cancel-notice">
-                    Will cancel on {new Date(subscription.currentPeriodEnd * 1000).toLocaleDateString()}
+                    Will cancel on {new Date(currentPeriodEnd).toLocaleDateString()}
                   </span>
                 )}
               </div>
@@ -146,13 +181,13 @@ export default function SubscriptionPage() {
                 ></div>
               </div>
               <div className="usage-text">
-                {usage.analysesCount} / {currentPlan.limits.analysesPerMonth === -1 ? '∞' : currentPlan.limits.analysesPerMonth} analyses
+                {analysesCount} / {currentPlan.limits.analysesPerMonth === -1 ? '∞' : currentPlan.limits.analysesPerMonth} analyses
                 ({usagePercent.toFixed(1)}%)
               </div>
             </div>
 
             <div className="plan-actions">
-              {!subscription.cancelAtPeriodEnd && (
+              {!cancelAtPeriodEnd && (
                 <button className="btn btn-outline" onClick={handleCancel}>
                   Cancel Subscription
                 </button>
@@ -167,8 +202,8 @@ export default function SubscriptionPage() {
                 <div key={plan.id} className="plan-card upgrade-card">
                   <h3>{plan.name}</h3>
                   <div className="plan-price">
-                    <span className="currency">$</span>
-                    <span className="amount">{plan.price}</span>
+                    <span className="currency">{currencySymbol(plan.currency)}</span>
+                    <span className="amount">{formatPrice(plan.price, plan.currency)}</span>
                     <span className="interval">/{plan.interval}</span>
                   </div>
                   <ul className="plan-features">

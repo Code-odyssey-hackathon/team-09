@@ -2,6 +2,18 @@ import { db } from '../../../lib/supabase.js'
 import { supabase } from '../../../lib/supabase.js'
 import { NextResponse } from 'next/server'
 
+function normalizeSubscription(subscription) {
+  if (!subscription) return null
+
+  return {
+    ...subscription,
+    plan: subscription.subscription_plans || null,
+    currentPeriodStart: subscription.current_period_start || null,
+    currentPeriodEnd: subscription.current_period_end || null,
+    cancelAtPeriodEnd: subscription.status === 'cancelled',
+  }
+}
+
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url)
@@ -17,7 +29,7 @@ export async function GET(request) {
     const subscription = await db.getUserSubscription(userId)
 
     return NextResponse.json({
-      subscription: subscription || null,
+      subscription: normalizeSubscription(subscription),
       message: subscription ? 'Subscription retrieved successfully.' : 'No active subscription found.'
     })
   } catch (error) {
@@ -69,7 +81,7 @@ export async function POST(request) {
     if (error) throw error
 
     return NextResponse.json({
-      subscription,
+      subscription: normalizeSubscription(subscription),
       message: 'Subscription created successfully.'
     })
   } catch (error) {
@@ -93,22 +105,42 @@ export async function PUT(request) {
       )
     }
 
-    const existingSubscription = USER_SUBSCRIPTIONS.get(userId)
-    if (!existingSubscription) {
+    const { data: existingSubscription, error: existingError } = await supabase
+      .from('user_subscriptions')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .single()
+
+    if (existingError || !existingSubscription) {
       return NextResponse.json(
         { error: 'No active subscription found.' },
         { status: 404 }
       )
     }
 
-    const newSubscription = createSubscription(userId, planId)
-    USER_SUBSCRIPTIONS.set(userId, newSubscription)
+    const { data: updatedSubscription, error: updateError } = await supabase
+      .from('user_subscriptions')
+      .update({
+        plan_id: planId,
+        status: 'active',
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', existingSubscription.id)
+      .select(`
+        *,
+        subscription_plans (*)
+      `)
+      .single()
+
+    if (updateError) throw updateError
 
     return NextResponse.json({
-      subscription: newSubscription,
+      subscription: normalizeSubscription(updatedSubscription),
       message: 'Subscription updated successfully.'
     })
   } catch (error) {
+    console.error('Update subscription error:', error)
     return NextResponse.json(
       { error: error.message || 'Failed to update subscription.' },
       { status: 500 }
@@ -128,22 +160,41 @@ export async function DELETE(request) {
       )
     }
 
-    const subscription = USER_SUBSCRIPTIONS.get(userId)
-    if (!subscription) {
+    const { data: existingSubscription, error: existingError } = await supabase
+      .from('user_subscriptions')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .single()
+
+    if (existingError || !existingSubscription) {
       return NextResponse.json(
         { error: 'No active subscription found.' },
         { status: 404 }
       )
     }
 
-    // Mark for cancellation at period end
-    subscription.cancelAtPeriodEnd = true
+    const { data: cancelledSubscription, error: cancelError } = await supabase
+      .from('user_subscriptions')
+      .update({
+        status: 'cancelled',
+        updated_at: new Date().toISOString(),
+      })
+      .eq('id', existingSubscription.id)
+      .select(`
+        *,
+        subscription_plans (*)
+      `)
+      .single()
+
+    if (cancelError) throw cancelError
 
     return NextResponse.json({
-      subscription,
-      message: 'Subscription will be cancelled at the end of the current period.'
+      subscription: normalizeSubscription(cancelledSubscription),
+      message: 'Subscription cancelled successfully.'
     })
   } catch (error) {
+    console.error('Cancel subscription error:', error)
     return NextResponse.json(
       { error: 'Failed to cancel subscription.' },
       { status: 500 }

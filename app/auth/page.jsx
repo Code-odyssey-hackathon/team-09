@@ -51,7 +51,7 @@ export default function AuthPage() {
           <div className="auth-highlights">
             <div className="auth-highlight-item">
               <span className="auth-highlight-title">Protected</span>
-              <span className="auth-highlight-subtitle">Supabase-backed auth</span>
+              <span className="auth-highlight-subtitle">App auth endpoint</span>
             </div>
             <div className="auth-highlight-item">
               <span className="auth-highlight-title">Fast</span>
@@ -103,7 +103,7 @@ export default function AuthPage() {
                 placeholder={t('authPasswordPlaceholder')}
                 required
               />
-              <span className="field-help">Passwords are sent securely to the auth API.</span>
+              <span className="field-help">Passwords are validated by the app login endpoint.</span>
             </label>
             <button className="btn btn-primary" type="submit" disabled={loading}>
               {loading ? t('authSigningIn') : t('authSignIn')}

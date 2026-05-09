@@ -32,16 +32,16 @@ const TRANSLATIONS = {
     homeCardLabel: 'Live experience',
     homeCardH2: 'Photo-based plant stress analysis',
     homeCardDesc:
-      'A modern Next.js interface backed by Vercel Python serverless functions. Upload, analyse, and review field diagnostics instantly.',
-    homePillML: 'Live ML API',
+      'A modern Next.js interface with server-side APIs for upload, analysis, and field diagnostics.',
+    homePillML: 'AI analysis API',
     homePillUpload: 'Image upload',
     homePillPlan: 'Action plan',
     homeFeature1Title: 'Dynamic experience',
     homeFeature1Desc:
       'The site now uses Next.js and React for dynamic pages with a real API backend. Every route renders on-demand and supports fast client-side interactions.',
-    homeFeature2Title: 'Python serverless API',
+    homeFeature2Title: 'API-powered analysis',
     homeFeature2Desc:
-      'Existing Vercel Python functions remain intact and continue to serve the crop prediction and auth endpoints.',
+      'Server-side API routes handle prediction and authentication flows used by the dashboard.',
     homeFeature3Title: 'Mobile-friendly layout',
     homeFeature3Desc:
       'Responsive components and accessible forms ensure the app works well across phones, tablets, and desktop browsers.',
@@ -103,7 +103,7 @@ const TRANSLATIONS = {
     authEyebrow: 'Authentication',
     authH1: 'Secure access with our auth API.',
     authDesc:
-      'This login form sends credentials to the Python serverless endpoint and returns an access token.',
+      'This login form connects to the app authentication endpoint and signs you into the dashboard.',
     authUseApp: 'Use the Dashboard',
     authLoginTitle: 'Login',
     authEmail: 'Email address',
@@ -133,16 +133,16 @@ const TRANSLATIONS = {
     homeCardLabel: 'लाइव अनुभव',
     homeCardH2: 'फोटो-आधारित पौधे तनाव विश्लेषण',
     homeCardDesc:
-      'Vercel Python सर्वरलेस फ़ंक्शन द्वारा समर्थित एक आधुनिक Next.js इंटरफ़ेस। तुरंत अपलोड, विश्लेषण और खेत निदान देखें।',
-    homePillML: 'लाइव ML API',
+      'सर्वर-साइड API द्वारा समर्थित एक आधुनिक Next.js इंटरफ़ेस। तुरंत अपलोड, विश्लेषण और खेत निदान देखें।',
+    homePillML: 'AI विश्लेषण API',
     homePillUpload: 'छवि अपलोड',
     homePillPlan: 'कार्य योजना',
     homeFeature1Title: 'डायनामिक अनुभव',
     homeFeature1Desc:
       'साइट अब Next.js और React का उपयोग करती है। प्रत्येक रूट ऑन-डिमांड रेंडर होता है और तेज़ इंटरैक्शन का समर्थन करता है।',
-    homeFeature2Title: 'Python सर्वरलेस API',
+    homeFeature2Title: 'API-संचालित विश्लेषण',
     homeFeature2Desc:
-      'मौजूदा Vercel Python फ़ंक्शन बरकरार हैं और फसल भविष्यवाणी और auth एंडपॉइंट की सेवा जारी रखते हैं।',
+      'सर्वर-साइड API रूट्स डैशबोर्ड द्वारा उपयोग किए जाने वाले भविष्यवाणी और auth फ्लो संभालते हैं।',
     homeFeature3Title: 'मोबाइल-अनुकूल लेआउट',
     homeFeature3Desc:
       'रिस्पॉन्सिव घटक और सुलभ फ़ॉर्म फ़ोन, टैबलेट और डेस्कटॉप ब्राउज़र पर सुचारू रूप से काम करते हैं।',
@@ -202,7 +202,7 @@ const TRANSLATIONS = {
     authEyebrow: 'प्रमाणीकरण',
     authH1: 'हमारे auth API के साथ सुरक्षित पहुँच।',
     authDesc:
-      'यह लॉगिन फ़ॉर्म Python सर्वरलेस एंडपॉइंट पर क्रेडेंशियल भेजता है और एक एक्सेस टोकन लौटाता है।',
+      'यह लॉगिन फ़ॉर्म ऐप auth एंडपॉइंट से जुड़कर आपको डैशबोर्ड में साइन इन करता है।',
     authUseApp: 'डैशबोर्ड का उपयोग करें',
     authLoginTitle: 'लॉगिन',
     authEmail: 'ईमेल पता',
@@ -232,16 +232,16 @@ const TRANSLATIONS = {
     homeCardLabel: 'Experiencia en vivo',
     homeCardH2: 'Análisis de estrés de plantas por foto',
     homeCardDesc:
-      'Una interfaz moderna de Next.js respaldada por funciones serverless Python de Vercel. Sube, analiza y revisa diagnósticos de campo al instante.',
-    homePillML: 'API ML en vivo',
+      'Una interfaz moderna de Next.js con APIs del lado del servidor para subir, analizar y revisar diagnósticos de campo.',
+    homePillML: 'API de análisis con IA',
     homePillUpload: 'Subida de imágenes',
     homePillPlan: 'Plan de acción',
     homeFeature1Title: 'Experiencia dinámica',
     homeFeature1Desc:
       'El sitio usa Next.js y React para páginas dinámicas con un backend API real. Cada ruta se renderiza a demanda y soporta interacciones rápidas.',
-    homeFeature2Title: 'API serverless Python',
+    homeFeature2Title: 'Análisis impulsado por API',
     homeFeature2Desc:
-      'Las funciones Python de Vercel existentes siguen intactas y continúan sirviendo los endpoints de predicción de cultivos y autenticación.',
+      'Las rutas API del servidor gestionan la predicción y los flujos de autenticación usados por el dashboard.',
     homeFeature3Title: 'Diseño adaptable para móvil',
     homeFeature3Desc:
       'Componentes responsivos y formularios accesibles garantizan que la app funcione bien en teléfonos, tabletas y navegadores de escritorio.',
@@ -301,7 +301,7 @@ const TRANSLATIONS = {
     authEyebrow: 'Autenticación',
     authH1: 'Acceso seguro con nuestra API de autenticación.',
     authDesc:
-      'Este formulario de inicio de sesión envía credenciales al endpoint serverless Python y devuelve un token de acceso.',
+      'Este formulario de inicio de sesión se conecta al endpoint de autenticación de la app y te inicia sesión en el dashboard.',
     authUseApp: 'Usar el Dashboard',
     authLoginTitle: 'Iniciar sesión',
     authEmail: 'Correo electrónico',
@@ -331,16 +331,16 @@ const TRANSLATIONS = {
     homeCardLabel: 'Expérience en direct',
     homeCardH2: 'Analyse du stress des plantes par photo',
     homeCardDesc:
-      'Une interface Next.js moderne soutenue par des fonctions serverless Python Vercel. Téléversez, analysez et examinez les diagnostics de terrain instantanément.',
-    homePillML: 'API ML en direct',
+      'Une interface Next.js moderne avec des API côté serveur pour téléverser, analyser et consulter les diagnostics de terrain.',
+    homePillML: 'API d\'analyse IA',
     homePillUpload: 'Upload d\'image',
     homePillPlan: 'Plan d\'action',
     homeFeature1Title: 'Expérience dynamique',
     homeFeature1Desc:
       'Le site utilise Next.js et React pour des pages dynamiques avec un vrai backend API. Chaque route se rend à la demande et prend en charge les interactions rapides.',
-    homeFeature2Title: 'API serverless Python',
+    homeFeature2Title: 'Analyse pilotée par API',
     homeFeature2Desc:
-      'Les fonctions Python Vercel existantes restent intactes et continuent de servir les endpoints de prédiction et d\'authentification.',
+      'Les routes API côté serveur gèrent la prédiction et les flux d\'authentification utilisés par le dashboard.',
     homeFeature3Title: 'Interface adaptée aux mobiles',
     homeFeature3Desc:
       'Des composants responsifs et des formulaires accessibles garantissent que l\'app fonctionne bien sur téléphones, tablettes et navigateurs de bureau.',
@@ -400,7 +400,7 @@ const TRANSLATIONS = {
     authEyebrow: 'Authentification',
     authH1: 'Accès sécurisé avec notre API d\'authentification.',
     authDesc:
-      'Ce formulaire de connexion envoie des identifiants à l\'endpoint serverless Python et renvoie un token d\'accès.',
+      'Ce formulaire de connexion se connecte à l\'endpoint d\'authentification de l\'app et vous connecte au dashboard.',
     authUseApp: 'Utiliser le Dashboard',
     authLoginTitle: 'Connexion',
     authEmail: 'Adresse e-mail',
@@ -428,14 +428,14 @@ const TRANSLATIONS = {
     homeLoginDemo: 'ಲಾಗಿನ್',
     homeCardLabel: 'ನೇರ ಅನುಭವ',
     homeCardH2: 'ಫೋಟೋ ಆಧಾರಿತ ಸಸ್ಯ ಒತ್ತಡ ವಿಶ್ಲೇಷಣೆ',
-    homeCardDesc: 'Vercel Python ಸರ್ವರ್‌ಲೆಸ್ ಕಾರ್ಯಗಳಿಂದ ಬೆಂಬಲಿತ ಆಧುನಿಕ Next.js ಇಂಟರ್ಫೇಸ್. ತಕ್ಷಣ ಅಪ್‌ಲೋಡ್, ವಿಶ್ಲೇಷಿಸಿ ಮತ್ತು ಕ್ಷೇತ್ರ ರೋಗನಿರ್ಣಯ ಪರಿಶೀಲಿಸಿ.',
-    homePillML: 'ನೇರ ML API',
+    homeCardDesc: 'ಸರ್ವರ್-ಸೈಡ್ APIಗಳಿಂದ ಬೆಂಬಲಿತ ಆಧುನಿಕ Next.js ಇಂಟರ್ಫೇಸ್. ತಕ್ಷಣ ಅಪ್‌ಲೋಡ್ ಮಾಡಿ, ವಿಶ್ಲೇಷಿಸಿ ಮತ್ತು ಕ್ಷೇತ್ರ ರೋಗನಿರ್ಣಯ ಪರಿಶೀಲಿಸಿ.',
+    homePillML: 'AI ವಿಶ್ಲೇಷಣಾ API',
     homePillUpload: 'ಚಿತ್ರ ಅಪ್‌ಲೋಡ್',
     homePillPlan: 'ಕ್ರಿಯಾ ಯೋಜನೆ',
     homeFeature1Title: 'ಕ್ರಿಯಾಶೀಲ ಅನುಭವ',
     homeFeature1Desc: 'ಸೈಟ್ ಈಗ Next.js ಮತ್ತು React ಬಳಸುತ್ತದೆ. ಪ್ರತಿ ರೂಟ್ ಬೇಡಿಕೆಯ ಮೇರೆಗೆ ರೆಂಡರ್ ಆಗುತ್ತದೆ.',
-    homeFeature2Title: 'Python ಸರ್ವರ್‌ಲೆಸ್ API',
-    homeFeature2Desc: 'ಅಸ್ತಿತ್ವದಲ್ಲಿರುವ Vercel Python ಕಾರ್ಯಗಳು ಬೆಳೆ ಮುನ್ಸೂಚನೆ ಮತ್ತು auth ಎಂಡ್‌ಪಾಯಿಂಟ್‌ಗಳನ್ನು ಸೇವೆ ಮಾಡುತ್ತಲೇ ಇವೆ.',
+    homeFeature2Title: 'API ಚಾಲಿತ ವಿಶ್ಲೇಷಣೆ',
+    homeFeature2Desc: 'ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ಬಳಸುವ ಮುನ್ಸೂಚನೆ ಮತ್ತು auth ಪ್ರವಾಹಗಳನ್ನು ಸರ್ವರ್-ಸೈಡ್ API ಮಾರ್ಗಗಳು ನಿರ್ವಹಿಸುತ್ತವೆ.',
     homeFeature3Title: 'ಮೊಬೈಲ್ ಸ್ನೇಹಿ ವಿನ್ಯಾಸ',
     homeFeature3Desc: 'ಸ್ಪಂದನಶೀಲ ಘಟಕಗಳು ಫೋನ್, ಟ್ಯಾಬ್ಲೆಟ್ ಮತ್ತು ಡೆಸ್ಕ್‌ಟಾಪ್ ಬ್ರೌಸರ್‌ಗಳಲ್ಲಿ ಚೆನ್ನಾಗಿ ಕಾರ್ಯನಿರ್ವಹಿಸುತ್ತವೆ.',
 
@@ -493,7 +493,7 @@ const TRANSLATIONS = {
 
     authEyebrow: 'ದೃಢೀಕರಣ',
     authH1: 'ನಮ್ಮ auth API ಮೂಲಕ ಸುರಕ್ಷಿತ ಪ್ರವೇಶ.',
-    authDesc: 'ಈ ಲಾಗಿನ್ ಫಾರ್ಮ್ Python ಸರ್ವರ್‌ಲೆಸ್ ಎಂಡ್‌ಪಾಯಿಂಟ್‌ಗೆ ರುಜುವಾತುಗಳನ್ನು ಕಳುಹಿಸುತ್ತದೆ ಮತ್ತು ಆ್ಯಕ್ಸೆಸ್ ಟೋಕನ್ ನೀಡುತ್ತದೆ.',
+    authDesc: 'ಈ ಲಾಗಿನ್ ಫಾರ್ಮ್ ಅಪ್ಲಿಕೇಶನ್ auth ಎಂಡ್‌ಪಾಯಿಂಟ್‌ಗೆ ಸಂಪರ್ಕಿಸಿ ಡ್ಯಾಶ್‌ಬೋರ್ಡ್‌ಗೆ ಸೈನ್ ಇನ್ ಮಾಡುತ್ತದೆ.',
     authUseApp: 'ಡಾಶ್‌ಬೋರ್ಡ್ ಬಳಸಿ',
     authLoginTitle: 'ಲಾಗಿನ್',
     authEmail: 'ಇಮೇಲ್ ವಿಳಾಸ',
@@ -521,14 +521,14 @@ const TRANSLATIONS = {
     homeLoginDemo: 'உள்நுழைவு',
     homeCardLabel: 'நேரடி அனுபவம்',
     homeCardH2: 'புகைப்பட அடிப்படையிலான தாவர அழுத்த பகுப்பாய்வு',
-    homeCardDesc: 'Vercel Python சர்வர்லெஸ் செயல்பாடுகளால் ஆதரிக்கப்படும் நவீன Next.js இடைமுகம். உடனடியாக பதிவேற்றவும், பகுப்பாய்வு செய்யவும்.',
-    homePillML: 'நேரடி ML API',
+    homeCardDesc: 'சர்வர்-சைடு APIகளால் ஆதரிக்கப்படும் நவீன Next.js இடைமுகம். உடனடியாக பதிவேற்றி, பகுப்பாய்வு செய்து, நில தகவலைப் பாருங்கள்.',
+    homePillML: 'AI பகுப்பாய்வு API',
     homePillUpload: 'படம் பதிவேற்றம்',
     homePillPlan: 'செயல் திட்டம்',
     homeFeature1Title: 'மாறுகிற அனுபவம்',
     homeFeature1Desc: 'தளம் இப்போது Next.js மற்றும் React பயன்படுத்துகிறது. ஒவ்வொரு பாதையும் தேவைக்கேற்ப வழங்கப்படுகிறது.',
-    homeFeature2Title: 'Python சர்வர்லெஸ் API',
-    homeFeature2Desc: 'தற்போதுள்ள Vercel Python செயல்பாடுகள் பயிர் கணிப்பு மற்றும் auth இறுதிப்புள்ளிகளுக்கு சேவை தொடர்கின்றன.',
+    homeFeature2Title: 'API இயக்கும் பகுப்பாய்வு',
+    homeFeature2Desc: 'டாஷ்போர்டு பயன்படுத்தும் கணிப்பு மற்றும் auth செயல்முறைகளை சர்வர்-சைடு API வழிகள் நிர்வகிக்கின்றன.',
     homeFeature3Title: 'மொபைல் நட்பு தளவமைப்பு',
     homeFeature3Desc: 'பதிலளிக்கும் கூறுகள் தொலைபேசி, டேப்லெட் மற்றும் டெஸ்க்டாப் உலாவிகளில் நன்றாக செயல்படுகின்றன.',
 
@@ -586,7 +586,7 @@ const TRANSLATIONS = {
 
     authEyebrow: 'அங்கீகாரம்',
     authH1: 'நமது auth API மூலம் பாதுகாப்பான அணுகல்.',
-    authDesc: 'இந்த உள்நுழைவு படிவம் Python சர்வர்லெஸ் இறுதிப்புள்ளிக்கு சான்றுகளை அனுப்பி அணுகல் டோக்கனை வழங்குகிறது.',
+    authDesc: 'இந்த உள்நுழைவு படிவம் பயன்பாட்டின் auth இறுதிப்புள்ளியுடன் இணைந்து டாஷ்போர்டில் உள்நுழைய உதவுகிறது.',
     authUseApp: 'டாஷ்போர்டை பயன்படுத்தவும்',
     authLoginTitle: 'உள்நுழைவு',
     authEmail: 'மின்னஞ்சல் முகவரி',
@@ -614,14 +614,14 @@ const TRANSLATIONS = {
     homeLoginDemo: 'లాగిన్',
     homeCardLabel: 'లైవ్ అనుభవం',
     homeCardH2: 'ఫోటో ఆధారిత మొక్క ఒత్తిడి విశ్లేషణ',
-    homeCardDesc: 'Vercel Python సర్వర్‌లెస్ ఫంక్షన్‌ల ద్వారా మద్దతు ఇచ్చే ఆధునిక Next.js ఇంటర్‌ఫేస్. తక్షణమే అప్‌లోడ్, విశ్లేషించండి మరియు పొల నిర్ధారణలు సమీక్షించండి.',
-    homePillML: 'లైవ్ ML API',
+    homeCardDesc: 'సర్వర్-సైడ్ APIలతో మద్దతు పొందిన ఆధునిక Next.js ఇంటర్‌ఫేస్. వెంటనే అప్‌లోడ్ చేసి, విశ్లేషించి, ఫీల్డ్ నిర్ధారణలు చూడండి.',
+    homePillML: 'AI విశ్లేషణ API',
     homePillUpload: 'చిత్రం అప్‌లోడ్',
     homePillPlan: 'చర్య ప్రణాళిక',
     homeFeature1Title: 'డైనమిక్ అనుభవం',
     homeFeature1Desc: 'సైట్ ఇప్పుడు Next.js మరియు React ఉపయోగిస్తుంది. ప్రతి రూట్ డిమాండ్‌పై రెండర్ అవుతుంది.',
-    homeFeature2Title: 'Python సర్వర్‌లెస్ API',
-    homeFeature2Desc: 'ఇప్పటికే ఉన్న Vercel Python ఫంక్షన్లు పంట అంచనా మరియు auth ఎండ్‌పాయింట్‌లకు సేవలు అందిస్తున్నాయి.',
+    homeFeature2Title: 'API ఆధారిత విశ్లేషణ',
+    homeFeature2Desc: 'డాష్‌బోర్డ్ ఉపయోగించే అంచనా మరియు auth ప్రవాహాలను సర్వర్-సైడ్ API మార్గాలు నిర్వహిస్తాయి.',
     homeFeature3Title: 'మొబైల్ అనుకూల లేఅవుట్',
     homeFeature3Desc: 'రెస్పాన్సివ్ కాంపోనెంట్లు ఫోన్, టాబ్లెట్ మరియు డెస్క్‌టాప్ బ్రౌజర్లలో బాగా పని చేస్తాయి.',
 
@@ -679,7 +679,7 @@ const TRANSLATIONS = {
 
     authEyebrow: 'ప్రమాణీకరణ',
     authH1: 'మా auth API తో సురక్షిత యాక్సెస్.',
-    authDesc: 'ఈ లాగిన్ ఫారమ్ Python సర్వర్‌లెస్ ఎండ్‌పాయింట్‌కు ఆధారాలు పంపి యాక్సెస్ టోకెన్ అందిస్తుంది.',
+    authDesc: 'ఈ లాగిన్ ఫారమ్ యాప్ auth ఎండ్‌పాయింట్‌కు కనెక్ట్ అయి డాష్‌బోర్డులో సైన్ ఇన్ చేస్తుంది.',
     authUseApp: 'డాష్బోర్డ్ వాడండి',
     authLoginTitle: 'లాగిన్',
     authEmail: 'ఇమెయిల్ చిరునామా',
