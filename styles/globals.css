@@ -111,16 +111,27 @@ a {
   box-shadow: 0 12px 40px rgba(34,197,94,0.20), 0 4px 12px rgba(0,0,0,0.25);
 }
 
+@keyframes leaf-float {
+  0%   { transform: translateY(0px)    rotate(0deg); }
+  30%  { transform: translateY(-14px)  rotate(1.5deg); }
+  60%  { transform: translateY(-8px)   rotate(-1deg); }
+  100% { transform: translateY(0px)    rotate(0deg); }
+}
+
 .hero-leaf-image {
   width: 100%;
   height: auto;
   object-fit: cover;
   display: block;
-  transition: transform 0.4s ease;
+  animation: leaf-float 4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  transition: animation-play-state 0.3s ease, filter 0.3s ease;
+  will-change: transform;
 }
 
-.hero-card:hover .hero-leaf-image {
-  transform: scale(1.04);
+.hero-card:hover .hero-leaf-image,
+.hero-card--image-only:hover .hero-leaf-image {
+  animation-play-state: paused;
+  filter: drop-shadow(0 20px 40px rgba(34,197,94,0.35));
 }
 
 /* App specific styles */
@@ -315,6 +326,7 @@ a {
   gap: 3rem;
   align-items: center;
   margin-bottom: 4rem;
+  overflow: visible;
 }
 
 .hero-copy h1,
@@ -488,6 +500,48 @@ a {
 
 .hero-card:hover {
   transform: translateY(-2px);
+}
+
+.hero-card--image-only {
+  padding: 0 !important;
+  overflow: visible;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Frameless leaf wrapper */
+.hero-leaf-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  padding: 1.5rem;
+}
+
+.hero-leaf-wrapper .hero-leaf-image {
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  border: none;
+  outline: none;
+}
+
+.hero-card--image-only .hero-image-container {
+  margin-bottom: 0;
+  border-radius: inherit;
+}
+
+.hero-card--image-only .hero-leaf-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  border-radius: inherit;
 }
 
 .hero-card h2 {
@@ -2809,4 +2863,36 @@ select:focus {
   .mkt-details-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── Pricing Toast Notification ─────────────────────────────────────────── */
+.pricing-toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.30);
+  animation: toast-in 0.35s cubic-bezier(0.34,1.56,0.64,1);
+  white-space: nowrap;
+}
+.pricing-toast--success {
+  background: rgba(34,197,94,0.20);
+  border: 1px solid rgba(34,197,94,0.45);
+  color: #4ade80;
+}
+.pricing-toast--error {
+  background: rgba(239,68,68,0.18);
+  border: 1px solid rgba(239,68,68,0.40);
+  color: #fca5a5;
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px) scale(0.92); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1);    }
 }

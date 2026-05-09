@@ -45,15 +45,9 @@ export default function Navigation() {
           </Link>
           <Link
             href="/pricing"
-            className={`navbar-link ${pathname === '/pricing' ? 'active' : ''}`}
+            className={`navbar-link ${pathname === '/pricing' || pathname === '/subscription' ? 'active' : ''}`}
           >
             {t('navPricing')}
-          </Link>
-          <Link
-            href="/subscription"
-            className={`navbar-link ${pathname === '/subscription' ? 'active' : ''}`}
-          >
-            {t('navSubscription')}
           </Link>
           <Link
             href="/marketplace"

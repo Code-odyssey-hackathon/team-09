@@ -19,7 +19,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/python-3.11-3776ab?logo=python&logoColor=white" alt="Python 3.11"/>
+  <img src="https://img.shields.io/badge/python-3.12-3776ab?logo=python&logoColor=white" alt="Python 3.12"/>
   <img src="https://img.shields.io/badge/Next.js-16-000?logo=nextdotjs&logoColor=white" alt="Next.js 16"/>
   <img src="https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=black" alt="React 19"/>
   <img src="https://img.shields.io/badge/model-MobileNetV2_ONNX-22c55e" alt="MobileNetV2 ONNX"/>
@@ -116,7 +116,7 @@ Crop stress — caused by drought, nutrient deficiencies, pests, and fungal infe
 | **ML Model** | MobileNetV2 (ImageNet pre-trained, PlantVillage fine-tuned) |
 | **Inference Runtime** | ONNX Runtime (CPU, ~200ms/image) |
 | **Image Processing** | Pillow (PIL) + NumPy |
-| **Backend API** | Python 3.11 Vercel Serverless Functions |
+| **Backend API** | Python 3.12 Vercel Serverless Functions |
 | **Authentication** | Supabase Auth (email/password + JWT) |
 | **Database** | Supabase (PostgreSQL with Row Level Security) |
 | **Climate API** | OpenWeatherMap Current Weather (free tier) |
@@ -178,7 +178,7 @@ Language preference is persisted in `localStorage`. Weather alerts and TTS audio
 | `Fungal Disease` | 45–95 | Spots, blights, powdery/downy mildew |
 
 - **Confidence threshold:** 0.40 — predictions below this return a "low confidence" advisory
-- **Model file:** `api/model/model.onnx` (~10 MB); falls back to deterministic demo mode if absent
+- **Model file:** `api/model/model.onnx` (~10 MB, not included in repo); falls back to deterministic demo mode if absent
 - **Version:** 1.2.0
 
 ---
@@ -188,7 +188,7 @@ Language preference is persisted in `localStorage`. Weather alerts and TTS audio
 ### Prerequisites
 
 - **Node.js 18+** and **npm**
-- **Python 3.11+**
+- **Python 3.12+**
 - **Vercel CLI** (`npm i -g vercel`)
 - **Supabase account** — [supabase.com](https://supabase.com)
 - *(Optional)* [OpenWeatherMap API key](https://openweathermap.org/api)
@@ -363,7 +363,10 @@ Returns current-month analysis count and limit for the user.
 │   ├── recommender.py          # Stress → treatment recommendation engine
 │   ├── supabase_client.py      # Supabase Python client helper
 │   ├── requirements.txt        # Python dependencies
-│   └── auth/                   # Auth-related Python endpoints
+│   ├── auth/                   # Auth-related Python endpoints
+│   │   ├── login.py
+│   │   └── signup.py
+│   └── model/                  # Place model.onnx here (not committed to repo)
 │
 ├── app/                        # Next.js App Router pages
 │   ├── layout.jsx              # Root layout (Nav + ThemeProvider + TranslationProvider)
@@ -391,7 +394,9 @@ Returns current-month analysis count and limit for the user.
 ├── styles/                     # Global CSS (glassmorphism design system)
 ├── public/                     # Static assets (hero image, icons)
 ├── supabase-schema.sql         # Full DB schema — run once in Supabase SQL Editor
+├── generate_samples.py         # Utility: generate sample images for testing
 ├── .env.example                # Environment variable template
+├── .python-version             # Pins Python 3.12 for Vercel runtime
 ├── vercel.json                 # Vercel config (Python functions, routing)
 ├── package.json                # Node dependencies
 └── README.md

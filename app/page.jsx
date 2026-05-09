@@ -30,20 +30,8 @@ export default function HomePage() {
             </Link>
           </div>
         </div>
-        <div className="hero-highlight">
-          <div className="hero-card">
-            <div className="hero-image-container">
-              <img src="/hero-leaf.png" alt="Healthy crop leaf" className="hero-leaf-image" />
-            </div>
-            <p className="card-label">{t('homeCardLabel')}</p>
-            <h2>{t('homeCardH2')}</h2>
-            <p>{t('homeCardDesc')}</p>
-            <div className="feature-list">
-              <span className="pill">{t('homePillML')}</span>
-              <span className="pill">{t('homePillUpload')}</span>
-              <span className="pill">{t('homePillPlan')}</span>
-            </div>
-          </div>
+        <div className="hero-leaf-wrapper">
+          <img src="/hero-leaf.png" alt="Healthy crop leaf" className="hero-leaf-image" />
         </div>
       </header>
 
