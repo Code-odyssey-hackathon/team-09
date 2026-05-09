@@ -41,19 +41,45 @@ export default function AuthPage() {
   }
 
   return (
-    <main className="page-shell">
+    <main className="page-shell auth-page">
       <div className="auth-layout">
-        <div className="auth-copy">
+        <section className="auth-copy card">
           <span className="eyebrow">{t('authEyebrow')}</span>
+          <div className="auth-copy-badge">Secure access</div>
           <h1>{t('authH1')}</h1>
           <p>{t('authDesc')}</p>
-          <Link href="/app" className="btn btn-outline">
-            {t('authUseApp')}
-          </Link>
-        </div>
+          <div className="auth-highlights">
+            <div className="auth-highlight-item">
+              <span className="auth-highlight-title">Protected</span>
+              <span className="auth-highlight-subtitle">Supabase-backed auth</span>
+            </div>
+            <div className="auth-highlight-item">
+              <span className="auth-highlight-title">Fast</span>
+              <span className="auth-highlight-subtitle">Login in a few clicks</span>
+            </div>
+            <div className="auth-highlight-item">
+              <span className="auth-highlight-title">Polished</span>
+              <span className="auth-highlight-subtitle">Premium dashboard UI</span>
+            </div>
+          </div>
+          <div className="auth-copy-actions">
+            <Link href="/app" className="btn btn-primary">
+              {t('authUseApp')}
+            </Link>
+            <Link href="/" className="btn btn-outline">
+              Back to home
+            </Link>
+          </div>
+        </section>
 
         <div className="auth-card card">
-          <h2>{t('authLoginTitle')}</h2>
+          <div className="auth-card-head">
+            <div>
+              <span className="section-title">Dashboard access</span>
+              <h2>{t('authLoginTitle')}</h2>
+            </div>
+            <span className="auth-card-glass">Frosted glass</span>
+          </div>
           <form onSubmit={handleSubmit} className="form-grid">
             <label className="label">
               {t('authEmail')}
@@ -65,6 +91,7 @@ export default function AuthPage() {
                 placeholder={t('authEmailPlaceholder')}
                 required
               />
+              <span className="field-help">Use the email tied to your dashboard account.</span>
             </label>
             <label className="label">
               {t('authPassword')}
@@ -76,6 +103,7 @@ export default function AuthPage() {
                 placeholder={t('authPasswordPlaceholder')}
                 required
               />
+              <span className="field-help">Passwords are sent securely to the auth API.</span>
             </label>
             <button className="btn btn-primary" type="submit" disabled={loading}>
               {loading ? t('authSigningIn') : t('authSignIn')}
