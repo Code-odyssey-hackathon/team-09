@@ -256,6 +256,56 @@ export const TRANSLATIONS = {
     mktVerified: 'Verified',
     mktFarmerRole: '🌾 Farmer',
     mktRetailerRole: '🏪 Retailer',
+
+    // Stats bar
+    statFarmers: 'Farmers Protected',
+    statAccuracy: 'Diagnostic Accuracy',
+    statLanguages: 'Languages Supported',
+    statDiagnosis: 'Avg. Diagnosis Time',
+
+    // How it works
+    howEyebrow: 'Simple Process',
+    howH2: 'How It Works',
+    howDesc: 'From a single photo to a full action plan — in under a minute.',
+    howStep1Title: 'Upload a Photo',
+    howStep1Desc: 'Snap a leaf, full plant, or tree. Upload any JPEG, PNG, or WebP image directly from your phone or camera.',
+    howStep2Title: 'AI Analyzes',
+    howStep2Desc: 'Our MobileNetV2 model identifies stress patterns with high confidence, cross-referenced with live weather data.',
+    howStep3Title: 'Get Your Plan',
+    howStep3Desc: 'Receive a severity rating, detailed recommendations, and an audio briefing in your language — ready to act on.',
+
+    // Tech stack
+    techEyebrow: 'Under the Hood',
+    techH2: 'Built on Modern AI Infrastructure',
+    techDesc: 'A production-grade stack engineered for speed, accuracy, and accessibility across devices and languages.',
+    techNextDetail: 'Server-side rendering & edge routing',
+    techMobileNetDetail: 'Crop stress vision model',
+    techWeatherDetail: 'Real-time climate risk alerts',
+    techTTSDetail: 'Multilingual audio recommendations',
+    techAuthDetail: 'Secure authentication & user data',
+    techVercelDetail: 'Global CDN deployment',
+
+    // Testimonials
+    testimonialsEyebrow: 'Farmer Stories',
+    testimonialsH2: 'Trusted by Growers Across India',
+    testimonial1Quote: 'I caught nitrogen deficiency in my paddy before it spread to the whole field. The audio recommendation was a game-changer.',
+    testimonial1Name: 'Ravi Kumar',
+    testimonial1Role: 'Paddy Farmer, Telangana',
+    testimonial2Quote: 'Using this in Kannada made all the difference. Finally an app that speaks my language and understands my crops.',
+    testimonial2Name: 'Lakshmi Devi',
+    testimonial2Role: 'Vegetable Grower, Karnataka',
+    testimonial3Quote: 'The weather risk alert warned me about waterlogging risk two days before heavy rain. Saved my tomato crop entirely.',
+    testimonial3Name: 'Arjun Singh',
+    testimonial3Role: 'Tomato Farmer, Maharashtra',
+
+    // Footer
+    footerTagline: 'AI-powered crop stress diagnosis for every farmer, in every language.',
+    footerProduct: 'Product',
+    footerCompany: 'Company',
+    footerTech: 'Technology',
+    footerGithub: 'GitHub Repository',
+    footerCopy: '© 2026 AI Crop Stress Whisperer. Built for Code Odyssey Hackathon.',
+    footerHackathon: '🏆 Hackathon Project — Team 09',
   },
 
   hi: {
@@ -496,6 +546,56 @@ export const TRANSLATIONS = {
     mktVerified: 'सत्यापित',
     mktFarmerRole: '🌾 किसान',
     mktRetailerRole: '🏪 विक्रेता',
+
+    // Stats bar
+    statFarmers: 'किसान सुरक्षित',
+    statAccuracy: 'निदान सटीकता',
+    statLanguages: 'समर्थित भाषाएँ',
+    statDiagnosis: 'औसत निदान समय',
+
+    // How it works
+    howEyebrow: 'सरल प्रक्रिया',
+    howH2: 'यह कैसे काम करता है',
+    howDesc: 'एक फोटो से पूरी कार्य योजना तक — एक मिनट से कम में।',
+    howStep1Title: 'फोटो अपलोड करें',
+    howStep1Desc: 'पत्ती, पूरे पौधे या पेड़ की तस्वीर लें। अपने फोन या कैमरे से सीधे JPEG, PNG, या WebP अपलोड करें।',
+    howStep2Title: 'AI विश्लेषण करती है',
+    howStep2Desc: 'हमारा MobileNetV2 मॉडल उच्च विश्वास के साथ तनाव पैटर्न पहचानता है, लाइव मौसम डेटा के साथ क्रॉस-रेफरेंस।',
+    howStep3Title: 'अपनी योजना पाएं',
+    howStep3Desc: 'गंभीरता रेटिंग, विस्तृत सिफारिशें और अपनी भाषा में ऑडियो ब्रीफिंग प्राप्त करें।',
+
+    // Tech stack
+    techEyebrow: 'तकनीक',
+    techH2: 'आधुनिक AI इंफ्रास्ट्रक्चर पर निर्मित',
+    techDesc: 'गति, सटीकता और पहुंच के लिए इंजीनियर किया गया प्रोडक्शन-ग्रेड स्टैक।',
+    techNextDetail: 'सर्वर-साइड रेंडरिंग और एज रूटिंग',
+    techMobileNetDetail: 'फसल तनाव विजन मॉडल',
+    techWeatherDetail: 'रियल-टाइम जलवायु जोखिम अलर्ट',
+    techTTSDetail: 'बहुभाषी ऑडियो सिफारिशें',
+    techAuthDetail: 'सुरक्षित प्रमाणीकरण और उपयोगकर्ता डेटा',
+    techVercelDetail: 'वैश्विक CDN तैनाती',
+
+    // Testimonials
+    testimonialsEyebrow: 'किसानों की कहानियां',
+    testimonialsH2: 'पूरे भारत के किसानों का विश्वास',
+    testimonial1Quote: 'मैंने धान में नाइट्रोजन की कमी को पूरे खेत में फैलने से पहले पकड़ा। ऑडियो सिफारिश एक गेम-चेंजर थी।',
+    testimonial1Name: 'रवि कुमार',
+    testimonial1Role: 'धान किसान, तेलंगाना',
+    testimonial2Quote: 'कन्नड़ में उपयोग करने से बड़ा फर्क पड़ा। अंततः एक ऐप जो मेरी भाषा बोलती है।',
+    testimonial2Name: 'लक्ष्मी देवी',
+    testimonial2Role: 'सब्जी उत्पादक, कर्नाटक',
+    testimonial3Quote: 'मौसम जोखिम अलर्ट ने भारी बारिश से दो दिन पहले जलभराव के जोखिम की चेतावनी दी। मेरी टमाटर की फसल बच गई।',
+    testimonial3Name: 'अर्जुन सिंह',
+    testimonial3Role: 'टमाटर किसान, महाराष्ट्र',
+
+    // Footer
+    footerTagline: 'हर किसान के लिए, हर भाषा में AI-संचालित फसल तनाव निदान।',
+    footerProduct: 'उत्पाद',
+    footerCompany: 'कंपनी',
+    footerTech: 'तकनीक',
+    footerGithub: 'GitHub रिपॉजिटरी',
+    footerCopy: '© 2026 AI फसल तनाव विश्लेषक। Code Odyssey हैकाथॉन के लिए निर्मित।',
+    footerHackathon: '🏆 हैकाथॉन प्रोजेक्ट — टीम 09',
   },
 
   es: {
