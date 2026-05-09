@@ -250,6 +250,7 @@ function localizeClimateAlert(climateAlert, lang) {
 export default function CropAppPage() {
   const inputRef = useRef(null)
   const audioRef = useRef(null)
+  const resultRef = useRef(null)
   const { t, lang } = useTranslation()
   const [profile, setProfile] = useState(DEFAULT_PROFILE)
   const [file, setFile] = useState(null)
@@ -426,6 +427,10 @@ export default function CropAppPage() {
         recommendation: data.recommendation || '',
         imageBase64: previewBase64 || null,
       })
+      // Scroll to results after a short tick so the section has rendered
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 80)
     } catch (err) {
       setError(err instanceof Error ? err.message : t('appAPIError'))
     } finally {
@@ -717,7 +722,7 @@ export default function CropAppPage() {
       {error && <div className="alert alert-error">{error}</div>}
 
       {report && (
-        <section className="result-section">
+        <section className="result-section" ref={resultRef}>
           <div className="result-header">
             <div>
               <p className="section-title">{t('appPrediction')}</p>
