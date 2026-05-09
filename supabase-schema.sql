@@ -97,9 +97,20 @@ CREATE POLICY "Users can view own profile" ON public.profiles
 CREATE POLICY "Users can update own profile" ON public.profiles
   FOR UPDATE USING (auth.uid() = id);
 
+CREATE POLICY "Users can insert own profile" ON public.profiles
+  FOR INSERT WITH CHECK (auth.uid() = id);
+
 -- Usage tracking: Users can view their own usage
 CREATE POLICY "Users can view own usage" ON public.usage_tracking
   FOR SELECT USING (auth.uid() = user_id);
+
+-- Usage tracking: Users can insert their own usage
+CREATE POLICY "Users can insert own usage" ON public.usage_tracking
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- Usage tracking: Users can update their own usage
+CREATE POLICY "Users can update own usage" ON public.usage_tracking
+  FOR UPDATE USING (auth.uid() = user_id);
 
 -- Subscription plans: Everyone can read plans
 CREATE POLICY "Anyone can view subscription plans" ON public.subscription_plans
@@ -109,12 +120,24 @@ CREATE POLICY "Anyone can view subscription plans" ON public.subscription_plans
 CREATE POLICY "Users can view own subscriptions" ON public.user_subscriptions
   FOR SELECT USING (auth.uid() = user_id);
 
+-- User subscriptions: Users can insert their own subscriptions
+CREATE POLICY "Users can insert own subscriptions" ON public.user_subscriptions
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- User subscriptions: Users can update their own subscriptions
+CREATE POLICY "Users can update own subscriptions" ON public.user_subscriptions
+  FOR UPDATE USING (auth.uid() = user_id);
+
 -- Analysis history: Users can view their own history
 CREATE POLICY "Users can view own analysis history" ON public.analysis_history
   FOR SELECT USING (auth.uid() = user_id);
 
 CREATE POLICY "Users can insert own analysis history" ON public.analysis_history
   FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+-- Analysis history: Users can update their own history
+CREATE POLICY "Users can update own analysis history" ON public.analysis_history
+  FOR UPDATE USING (auth.uid() = user_id);
 
 -- Function to handle new user creation
 CREATE OR REPLACE FUNCTION public.handle_new_user()
